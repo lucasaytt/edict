@@ -26,7 +26,7 @@
   <img src="https://img.shields.io/badge/Dashboard-Real--time-F59E0B?style=flat-square" alt="Dashboard">
   <img src="https://img.shields.io/badge/License-MIT-22C55E?style=flat-square" alt="License">
   <img src="https://img.shields.io/badge/Frontend-React_18-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
-  <img src="https://img.shields.io/badge/Backend-stdlib_only-EC4899?style=flat-square" alt="Zero Backend Dependencies">
+  <img src="https://img.shields.io/badge/Backend-FastAPI_+_PostgreSQL_+_Redis-EC4899?style=flat-square" alt="FastAPI + PostgreSQL + Redis">
 </p>
 
 <p align="center">
@@ -34,6 +34,48 @@
 </p>
 
 ---
+
+## 🔱 Maintained Fork Notice
+
+> 此為 [cft0808/edict](https://github.com/cft0808/edict) 的 **downstream fork**，目標是驗證以下改動並整理為 upstream PR：
+
+| 改動 | 狀態 | 說明 |
+|------|------|------|
+| **DB-first 任務狀態** | ✅ 已實作 | PostgreSQL + Redis Streams 驅動，`task_source_mode.py` 切換 |
+| **Telegram 工作流** | ✅ 已實作 | 通知管道從 Feishu 遷移至 Telegram，source channel 追蹤 |
+| **繁體中文本地化** | ✅ 已實作 | Dashboard 全介面繁中，`fanti_convert.py` 工具 |
+| **本地部署強化** | ✅ 已實作 | systemd user service、`.env` 密鑰管理、edict.sh 全服務管理 |
+| **安全加固** | ✅ 已實作 | API Key 後端鑑權、動態密碼生成、審計日誌 |
+| **Windows 相容** | 🚧 驗證中 | 路徑解析、shell 腳本跨平台適配 |
+| **程式註解補完** | 🚧 進行中 | 依 RULES.md 規範補齊中文必要註解 |
+
+> 上游 [cft0808/edict](https://github.com/cft0808/edict) 為三省六部 AI 多 Agent 協作架構的原始專案。本 fork 之改動將逐步以 PR 形式回饋上游。
+
+## 🆕 近期更新（2026-06）
+
+- **任務資料源改為 DB-first**：Dashboard `live-status` 支援 `db/json/auto` 模式切換，預設建議 `db`。
+- **模式切換 CLI**：新增 `scripts/task_source_mode.py`，可查詢/切換資料源模式與後端健康狀態。
+- **流程一致性強化**：主路徑以 **Event Bus** 為準，CLI 僅作故障排查與補救。
+- **模型配置升級**：每個 Agent 可獨立切換 LLM 與 THINK，模型下拉優先顯示 runtime 可用項目。
+- **後端安全加固**：寫入端點強制 API Key 鑑權，密碼/密鑰統一由 `.env` 管理，預設值改為動態隨機生成。
+- **通知管道 Telegram 化**：從 Feishu 遷移至 Telegram，dispatch 自動追蹤任務來源 channel 並優先回報。
+- **Dispatch 統一重構**：消除重複派發邏輯，統一 `openclaw` 路徑解析，支援指數退避重試。
+- **繁體中文本地化**：新增 `scripts/fanti_convert.py`，Dashboard 全介面支援繁體中文。
+- **死碼清理**：移除 35 個 `_fanti` 重複檔、`channels/__init__.py` 殘留程式碼。
+- **穩定性修復**：已完成相容層與同步路徑修復，當前測試結果為 **225 passed**。
+- **Dashboard 任務分類修正**：`isEdict()` 現可正確辨識 UUID 格式任務，不再誤歸類為小任務。
+- **系統部署自動化**：新增 `systemd/` 模板（5 個 user service）與 `.env.example`，`install.sh` 支援 `install-services` + `init_env`。
+- **後端設定集中化**：`config.py` 擴充 7 個 Settings 欄位（stall 閾值、dispatch 超時、重試次數、Dashboard port 等），Worker 不再 hardcode。
+- **Dashboard 穩定性強化**：修復 `STATE_LABEL` 未定義、`loadAll()` 競爭條件、`isEdict()` 只匹配 JJC-、`EventBus.get_pending` 缺失、`flow_log` 重複欄位。
+- **Dashboard port 環境變數化**：支援 `DASHBOARD_PORT` / `EDICT_DASHBOARD_PORT`，fallback 7891。
+
+```bash
+# 查看目前資料源模式
+python3 scripts/task_source_mode.py status
+
+# 切換到 DB 模式
+python3 scripts/task_source_mode.py set db
+```
 
 ## 🎬 Demo
 
@@ -50,7 +92,7 @@
 <p align="center">
   <img src="docs/demo.gif" alt="三省六部 Demo" width="100%">
   <br>
-  <sub>飞书下旨 → 太子分拣 → 中书省规划 → 门下省审议 → 六部并行执行 → 奏折回报（30 秒）</sub>
+  <sub>Telegram 下旨 → 太子分拣 → 中书省规划 → 门下省审议 → 六部并行执行 → 奏折回报（30 秒）</sub>
 </p>
 </details>
 
@@ -83,7 +125,7 @@
 | **Agent 健康监控** | ❌ | ❌ | ❌ | **✅ 心跳 + 活跃度检测** |
 | **热切换模型** | ❌ | ❌ | ❌ | **✅ 看板内一键切换 LLM** |
 | **技能管理** | ❌ | ❌ | ❌ | **✅ 查看 / 添加 Skills** |
-| **新闻聚合推送** | ❌ | ❌ | ❌ | **✅ 天下要闻 + 飞书推送** |
+| **新闻聚合推送** | ❌ | ❌ | ❌ | **✅ 天下要闻 + Telegram 推送** |
 | **部署难度** | 中 | 高 | 中 | **低 · 一键安装 / Docker** |
 
 > **核心差异：制度性审核 + 完全可观测 + 实时可干预**
@@ -166,14 +208,14 @@ CrewAI 和 AutoGen 的 Agent 协作模式是 **"做完就交"**——没有人�
 
 **📰 天下要闻 · News**
 - 每日自动采集科技/财经资讯
-- 分类订阅管理 + 飞书推送
+- 分类订阅管理 + Telegram 推送
 
 </td></tr>
 <tr><td>
 
 **⚙️ 模型配置 · Models**
-- 每个 Agent 独立切换 LLM
-- 应用后自动重启 Gateway（~5秒生效）
+- 每个 Agent 独立切换 LLM 與 THINK
+- 应用后自动重启 Gateway（~5秒生效，模型与 THINK 同步）
 
 </td><td>
 
@@ -298,6 +340,7 @@ chmod +x install.sh && ./install.sh
 安装脚本自动完成：
 - ✅ 创建全量 Agent Workspace（含太子/吏部/早朝，兼容历史 main）
 - ✅ 写入各省部 SOUL.md（角色人格 + 工作流规则 + 数据清洗规范）
+- ✅ 生成 `.env` 設定檔（含 API Key 與資料庫密碼，預設值動態隨機生成）
 - ✅ 注册 Agent 及权限矩阵到 `openclaw.json`
 - ✅ **符号链接统一数据**（各 Workspace 的 data/scripts → 项目目录，确保数据一致）
 - ✅ **设置 Agent 间通信可见性**（`sessions.visibility all`，解决消息不可达问题）
@@ -323,20 +366,27 @@ open http://127.0.0.1:7891
 ```
 
 <details>
-<summary><b>🖥️ 生产环境部署（systemd）</b></summary>
+<summary><b>🖥️ 生产环境部署（systemd user）</b></summary>
+
+Edict 使用 **user-level systemd** 管理後端服務，無需 root 權限：
 
 ```bash
-# 安装 systemd 服务
-sudo cp edict.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable edict
-sudo systemctl start edict
+# 安裝 systemd user 服務（從 repo 內 edict.sh）
+bash edict.sh install-services
 
-# 或使用管理脚本
-bash edict.sh start    # 启动
-bash edict.sh status   # 查看状态
-bash edict.sh restart  # 重启
-bash edict.sh stop     # 停止
+# 全部啟動 / 停止
+bash edict.sh start-all
+bash edict.sh stop-all
+
+# 個別管理
+systemctl --user start edict-backend       # FastAPI 後端 (port 8000)
+systemctl --user start edict-dispatch-worker  # 派發 Worker
+systemctl --user start edict-orchestrator  # DAG 編排器
+systemctl --user start edict-outbox-relay  # Outbox Relay
+
+# 查看狀態 / 日誌
+bash edict.sh status
+journalctl --user -u edict-backend -f      # 即時日誌
 ```
 
 </details>
@@ -352,7 +402,7 @@ bash edict.sh stop     # 停止
 ```
                            ┌───────────────────────────────────┐
                            │          👑 皇上（你）              │
-                           │     Feishu · Telegram · Signal     │
+                           │     Telegram · Signal     │
                            └─────────────────┬─────────────────┘
                                              │ 下旨
                            ┌─────────────────▼─────────────────┐
@@ -427,6 +477,40 @@ bash edict.sh stop     # 停止
 > 🔄 **异步事件驱动**：服务间通过 Redis Streams EventBus 解耦通信，Outbox Relay 保障事件可靠投递。
 > 所有状态变更自动写入审计日志（`audit.py`），支持完整追溯。
 
+### 🔄 異步後端架構
+
+Edict 的任務流轉由 **PostgreSQL + Redis Streams** 驅動的異步後端支撐，確保事件可靠投遞、狀態一致：
+
+| 服務 | 技術 | 說明 |
+|------|------|------|
+| **後端 API** | FastAPI + SQLAlchemy | 任務/審計/Outbox 持久化，RESTful API（port 8000） |
+| **EventBus** | Redis Streams | 事件匯流排，服務間發布/訂閱解耦 |
+| **Dispatch Worker** | Python asyncio | 並行派發，指數退避重試 + 資源鎖 |
+| **Orchestrator** | DAG 解析 | 任務分解與依賴拓撲排序 |
+| **Outbox Relay** | 事務性 Outbox | 保障事件至少一次投遞，防止遺漏 |
+
+#### Systemd 服務管理
+
+```bash
+# 全部啟動
+bash edict.sh start-all
+
+# 個別管理
+systemctl --user start edict-backend       # FastAPI 後端
+systemctl --user start edict-dispatch      # 派發 Worker
+systemctl --user start edict-orchestrator  # DAG 編排器
+systemctl --user start edict-outbox        # Outbox Relay
+
+# 查看狀態
+bash edict.sh status
+```
+
+#### 安全機制
+
+- **API Key 鑑權**：所有寫入端點強制驗證 `X-API-Key` header
+- **.env 密鑰管理**：密碼/Token 統一由 `.env` 載入，預設值以 `secrets.token_urlsafe(32)` 動態隨機生成
+- **審計日誌**：所有狀態變更自動寫入 `audit` 表，支援完整追溯
+
 ---
 
 ## 📁 项目结构
@@ -446,11 +530,11 @@ edict/
 │   ├── libu_hr/                # 吏部 · 人事管理
 │   └── zaochao/SOUL.md         # 早朝官 · 情报枢纽
 ├── dashboard/
-│   ├── dashboard.html          # 军机处看板（单文件 · 零依赖 · ~2500 行）
+│   ├── dashboard.html          # 军机处看板（单文件 · 零依赖 · ~3400 行）
 │   ├── dist/                   # React 前端构建产物（Docker 镜像内包含，本地可选）
 │   ├── auth.py                 # Dashboard 登录鉴权
 │   ├── court_discuss.py        # 朝堂议政（多官员 LLM 讨论引擎）
-│   └── server.py               # API 服务器（Python 标准库 · 零依赖 · ~2300 行）
+│   └── server.py               # API 服务器（Python 标准库 · 零依赖 · ~3200 行）
 ├── edict/backend/              # 异步后端服务（SQLAlchemy + Redis）
 │   ├── app/models/
 │   │   ├── task.py             # 任务模型 + 状态机
@@ -463,26 +547,22 @@ edict/
 │       ├── dispatch_worker.py  # 并行调度 + 重试 + 资源锁
 │       ├── orchestrator_worker.py  # DAG 编排器
 │       └── outbox_relay.py     # 事务性 Outbox Relay
-├── agents/
-│   ├── <agent_id>/SOUL.md      # 各省部 Agent 人格模板
-│   ├── GLOBAL.md               # 全局 Agent 配置
-│   └── groups/                 # Agent 分组（sansheng / liubu）
 ├── scripts/
 │   ├── run_loop.sh             # 数据刷新循环（每 15 秒）
 │   ├── kanban_update.py        # 看板 CLI（含旨意数据清洗 + 标题校验 + 状态机）
+│   ├── tg_cli.py               # Telegram-friendly task CLI
 │   ├── skill_manager.py        # Skill 管理工具（远程/本地 Skills 添加、更新、移除）
-│   ├── agentrec_advisor.py     # Agent 模型推荐（功过簿 + 成本优化）
-│   ├── linucb_router.py        # LinUCB 智能路由
 │   ├── refresh_watcher.py      # 数据变更监听
 │   ├── sync_from_openclaw_runtime.py
 │   ├── sync_agent_config.py
+│   ├── apply_thinking_changes.py
 │   ├── sync_officials_stats.py
 │   ├── fetch_morning_news.py
 │   ├── refresh_live_data.py
 │   ├── apply_model_changes.py
 │   └── file_lock.py            # 文件锁（防多 Agent 并发写入）
 ├── tests/
-│   ├── test_e2e_kanban.py      # 端到端测试（17 个断言）
+│   ├── test_e2e_kanban.py      # 端到端测试（21 个断言）
 │   └── test_state_machine_consistency.py  # 状态机一致性测试
 ├── data/                       # 运行时数据（gitignored）
 ├── docs/
@@ -494,6 +574,8 @@ edict/
 ├── start.sh                    # 一键启动（Dashboard + 数据刷新）
 ├── edict.service               # systemd 服务配置（生产部署）
 ├── edict.sh                    # 服务管理脚本（start/stop/restart/status）
+├── RULES.md                    # 開發規則（死碼/安全/測試/文件規範）
+├── .env.example                # 環境變數範本
 ├── CONTRIBUTING.md             # 贡献指南
 └── LICENSE                     # MIT License
 ```
@@ -504,7 +586,7 @@ edict/
 
 ### 向 AI 下旨
 
-通过 Feishu / Telegram / Signal 给中书省发消息：
+通过 Telegram / Signal 给中书省发消息：
 
 ```
 给我设计一个用户注册系统，要求：
@@ -603,7 +685,8 @@ curl http://localhost:7891/api/remote-skills-list
 | 特点 | 说明 |
 |------|------|
 | **React 18 前端** | TypeScript + Vite + Zustand 状态管理，13 个功能组件 |
-| **纯 stdlib 后端** | `server.py` 基于 `http.server`，零依赖，同时提供 API + 静态文件服务 |
+| **纯 stdlib Dashboard** | `server.py` 基于 `http.server`，零依赖，同时提供 API + 静态文件服务 |
+| **FastAPI 后端** | `edict/backend/` 使用 FastAPI + SQLAlchemy + Redis，提供 EventBus、Outbox Relay、并行调度等服务 |
 | **EventBus 事件总线** | Redis Streams 发布/订阅，服务间解耦通信 |
 | **Outbox Relay** | 事务性 Outbox 模式，保障事件可靠投递（至少一次语义） |
 | **状态机审计** | 严格生命周期状态转换 + 完整审计日志（`audit.py`） |
@@ -722,9 +805,39 @@ python3 scripts/skill_manager.py import-official-hub --agents menxia
 
 </details>
 
----
-## �🗺️ Roadmap
+<details>
+<summary><b>❌ 修改後端程式後 API 回傳舊資料 / agent 列表不更新</b></summary>
 
+**症狀**：修改了 `backend/app/api/agents.py`、`config.py` 或其他 Python 檔後，API 仍回傳修改前的內容。例如 agent 數量不對、欄位值沒變。
+
+**原因**：Python 會將 `.py` 編譯為 `__pycache__/*.pyc` 快取。當 `systemctl restart` 後端時，若 `.pyc` 時間戳比 `.py` 新（或因多版本 Python 共存導致跨版本快取混淆），uvicorn 會載入舊 bytecode 而非新原始碼。
+
+**解決**：修改任何後端 Python 檔後，必須清除快取再重啟：
+
+```bash
+# 1. 清除所有 __pycache__
+find ~/ai-base/core/edict/edict/backend -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
+
+# 2. 重啟後端
+systemctl --user restart edict-backend
+
+# 3. 驗證（以 agents 為例）
+curl -s http://127.0.0.1:8000/api/agents | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+print(f'Agent count: {len(d[\"agents\"])}')  # 應為 11
+for a in d['agents']:
+    print(f'  {a[\"id\"]:12s} {a[\"name\"]}')
+"
+```
+
+**預防**：若你同時安裝了多個 Python 版本（如 3.11 + 3.12），兩者會各自產生 `.pyc`，更容易混淆。建議在 `edict.sh` 或部署腳本中加入自動清除快取的步驟。
+
+</details>
+
+---
+
+## �🗺️ Roadmap
 > 完整路线图及参与方式：[ROADMAP.md](ROADMAP.md)
 
 ### Phase 1 — 核心架构 ✅
@@ -734,14 +847,14 @@ python3 scripts/skill_manager.py import-official-hub --agents menxia
 - [x] 奏折系统（自动归档 + 五阶段时间线）
 - [x] 圣旨模板库（9 个预设 + 参数表单）
 - [x] 上朝仪式感动画
-- [x] 天下要闻 + 飞书推送 + 订阅管理
+- [x] 天下要闻 + Telegram 推送 + 订阅管理
 - [x] 模型热切换 + 技能管理 + 技能添加
 - [x] 官员总览 + Token 消耗统计
 - [x] 小任务 / 会话监控
 - [x] 太子消息分拣（闲聊自动回复 / 旨意建任务）
 - [x] 旨意数据清洗（路径/元数据/前缀自动剥离）
 - [x] 重复任务防护 + 已完成任务保护
-- [x] 端到端测试覆盖（17 个断言）
+- [x] 端到端测试覆盖（21 个断言）
 - [x] React 18 前端重构（TypeScript + Vite + Zustand · 13 组件）
 - [x] Agent 思考过程可视化（实时 thinking / 工具调用 / 返回结果）
 - [x] 前后端一体化部署（server.py 同时提供 API + 静态文件服务）

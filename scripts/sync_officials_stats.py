@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""同步各官员统计数据 → data/officials_stats.json"""
+"""同步各官員統計數據 → data/officials_stats.json"""
 import json, pathlib, datetime, logging
 from file_lock import atomic_json_write
 from utils import get_openclaw_home
@@ -13,7 +13,7 @@ OPENCLAW_HOME = get_openclaw_home()
 AGENTS_ROOT = OPENCLAW_HOME / 'agents'
 OPENCLAW_CFG = OPENCLAW_HOME / 'openclaw.json'
 
-# Anthropic 定价（每1M token，美元）
+# Anthropic 定價（每1M token，美元）
 MODEL_PRICING = {
     'anthropic/claude-sonnet-4-6':  {'in':3.0, 'out':15.0, 'cr':0.30, 'cw':3.75},
     'anthropic/claude-opus-4-5':    {'in':15.0,'out':75.0, 'cr':1.50, 'cw':18.75},
@@ -25,17 +25,17 @@ MODEL_PRICING = {
 }
 
 OFFICIALS = [
-    {'id':'taizi',   'label':'太子',  'role':'太子',    'emoji':'🤴','rank':'储君'},
-    {'id':'zhongshu','label':'中书省','role':'中书令',  'emoji':'📜','rank':'正一品'},
-    {'id':'menxia',  'label':'门下省','role':'侍中',    'emoji':'🔍','rank':'正一品'},
-    {'id':'shangshu','label':'尚书省','role':'尚书令',  'emoji':'📮','rank':'正一品'},
-    {'id':'libu',    'label':'礼部',  'role':'礼部尚书','emoji':'📝','rank':'正二品'},
-    {'id':'hubu',    'label':'户部',  'role':'户部尚书','emoji':'💰','rank':'正二品'},
-    {'id':'bingbu',  'label':'兵部',  'role':'兵部尚书','emoji':'⚔️','rank':'正二品'},
-    {'id':'xingbu',  'label':'刑部',  'role':'刑部尚书','emoji':'⚖️','rank':'正二品'},
-    {'id':'gongbu',  'label':'工部',  'role':'工部尚书','emoji':'🔧','rank':'正二品'},
-    {'id':'libu_hr', 'label':'吏部',  'role':'吏部尚书','emoji':'👔','rank':'正二品'},
-    {'id':'zaochao', 'label':'钦天监','role':'朝报官',  'emoji':'📰','rank':'正三品'},
+    {'id':'taizi',   'label':'太子',  'role':'太子',    'emoji':'🤴','rank':'儲君'},
+    {'id':'zhongshu','label':'中書省','role':'中書令',  'emoji':'📜','rank':'正一品'},
+    {'id':'menxia',  'label':'門下省','role':'侍中',    'emoji':'🔍','rank':'正一品'},
+    {'id':'shangshu','label':'尚書省','role':'尚書令',  'emoji':'📮','rank':'正一品'},
+    {'id':'libu',    'label':'禮部',  'role':'禮部尚書','emoji':'📝','rank':'正二品'},
+    {'id':'hubu',    'label':'戶部',  'role':'戶部尚書','emoji':'💰','rank':'正二品'},
+    {'id':'bingbu',  'label':'兵部',  'role':'兵部尚書','emoji':'⚔️','rank':'正二品'},
+    {'id':'xingbu',  'label':'刑部',  'role':'刑部尚書','emoji':'⚖️','rank':'正二品'},
+    {'id':'gongbu',  'label':'工部',  'role':'工部尚書','emoji':'🔧','rank':'正二品'},
+    {'id':'libu_hr', 'label':'吏部',  'role':'吏部尚書','emoji':'👔','rank':'正二品'},
+    {'id':'zaochao', 'label':'欽天監','role':'朝報官',  'emoji':'📰','rank':'正三品'},
 ]
 
 def rj(p, d):
@@ -68,7 +68,7 @@ def get_model(agent_id):
     for a in cfg.get('agents',{}).get('list',[]):
         if a.get('id') == agent_id:
             return normalize_model(a.get('model', default), default)
-    # 兼容历史：太子曾使用 main 作为运行时 id
+    # 兼容歷史：太子曾使用 main 作爲運行時 id
     if agent_id == 'taizi':
         for a in cfg.get('agents',{}).get('list',[]):
             if a.get('id') == 'main':
@@ -76,7 +76,7 @@ def get_model(agent_id):
     return default
 
 def scan_agent(agent_id):
-    """从 sessions.json 读取 token 统计（累计所有 session）"""
+    """從 sessions.json 讀取 token 統計（累計所有 session）"""
     sj = AGENTS_ROOT / agent_id / 'sessions' / 'sessions.json'
     if not sj.exists() and agent_id == 'taizi':
         sj = AGENTS_ROOT / 'main' / 'sessions' / 'sessions.json'
@@ -139,7 +139,7 @@ def get_task_stats(org_label, tasks):
     active = [t for t in tasks if t.get('state') in ('Doing','Review','Assigned') and t.get('org')==org_label]
     fl = sum(1 for t in tasks for f in t.get('flow_log',[])
              if f.get('from')==org_label or f.get('to')==org_label)
-    # 参与的旨意（JJC）列表
+    # 參與的旨意（JJC）列表
     participated = []
     for t in tasks:
         if not t['id'].startswith('JJC'): continue

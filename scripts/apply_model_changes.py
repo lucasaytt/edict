@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""应用 data/pending_model_changes.json → openclaw.json，并重启 Gateway"""
+"""應用 data/pending_model_changes.json → openclaw.json，並重啓 Gateway"""
 import json, pathlib, subprocess, datetime, shutil, logging, glob
 from file_lock import atomic_json_write, atomic_json_read
 from utils import get_openclaw_home
@@ -24,7 +24,7 @@ def rj(path, default):
 
 
 def cleanup_backups():
-    """只保留最近 MAX_BACKUPS 个备份"""
+    """只保留最近 MAX_BACKUPS 個備份"""
     pattern = str(OPENCLAW_CFG.parent / 'openclaw.json.bak.model-*')
     baks = sorted(glob.glob(pattern))
     for old in baks[:-MAX_BACKUPS]:
@@ -67,7 +67,7 @@ def main():
             errors.append({'change': change, 'error': f'agent {ag_id} not found'})
 
     if applied:
-        # 只有内容真正变化时才备份和写入
+        # 只有內容真正變化時才備份和寫入
         new_cfg = dict(cfg)
         new_cfg['agents'] = dict(cfg.get('agents', {}))
         new_cfg['agents']['list'] = agents_list
@@ -99,7 +99,7 @@ def main():
             log.info(f'gateway restart rc={r.returncode}')
         except Exception as e:
             log.error(f'gateway restart failed: {e}')
-            # 回滚配置
+            # 回滾配置
             if bak.exists():
                 shutil.copy2(bak, OPENCLAW_CFG)
                 log.warning('rolled back openclaw.json from backup')

@@ -1,7 +1,7 @@
-"""Legacy 兼容路由 — 通过旧版 task_id (JJC-xxx) 操作任务。
+"""Legacy 兼容路由 — 通過舊版 task_id (JJC-xxx) 操作任務。
 
-旧版 kanban_update.py 使用自定义 ID (JJC-20260301-007)，
-Edict 使用 UUID。此路由通过 tags 或 meta.legacy_id 映射。from __future__ import annotations"""
+舊版 kanban_update.py 使用自定義 ID (JJC-20260301-007)，
+Edict 使用 UUID。此路由通過 tags 或 meta.legacy_id 映射。from __future__ import annotations"""
 
 import logging
 from fastapi import APIRouter, Depends, HTTPException
@@ -10,6 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..db import get_db
+from ..auth import require_api_key
 from ..models.task import Task, TaskState
 from ..services.event_bus import get_event_bus
 from ..services.task_service import TaskService
@@ -19,7 +20,7 @@ router = APIRouter()
 
 
 async def _find_by_legacy_id(db: AsyncSession, legacy_id: str) -> Task | None:
-    """通过旧版 ID 查找任务（在 tags 或 meta.legacy_id 中搜索）。"""
+    """通過舊版 ID 查找任務（在 tags 或 meta.legacy_id 中搜索）。"""
     # 方式1: tags 包含 legacy_id
     stmt = select(Task).where(Task.tags.contains([legacy_id]))
     result = await db.execute(stmt)
@@ -48,7 +49,7 @@ class LegacyTodoUpdate(BaseModel):
     todos: list[dict]
 
 
-@router.post("/by-legacy/{legacy_id}/transition")
+@router.post("/by-legacy/{legacy_id}/transition", dependencies=[Depends(require_api_key)])
 async def legacy_transition(
     legacy_id: str,
     body: LegacyTransition,
@@ -72,7 +73,7 @@ async def legacy_transition(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.post("/by-legacy/{legacy_id}/progress")
+@router.post("/by-legacy/{legacy_id}/progress", dependencies=[Depends(require_api_key)])
 async def legacy_progress(
     legacy_id: str,
     body: LegacyProgress,
@@ -88,7 +89,7 @@ async def legacy_progress(
     return {"message": "ok"}
 
 
-@router.put("/by-legacy/{legacy_id}/todos")
+@router.put("/by-legacy/{legacy_id}/todos", dependencies=[Depends(require_api_key)])
 async def legacy_todos(
     legacy_id: str,
     body: LegacyTodoUpdate,

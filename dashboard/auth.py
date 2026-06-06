@@ -1,43 +1,42 @@
-"""三省六部 · 简易 JWT 认证模块（零外部依赖）。
+"""三省六部 · 簡易 JWT 認證模塊（零外部依賴）。
 
-使用 Python stdlib 实现：
-- 密码哈希: hashlib.pbkdf2_hmac (SHA-256, 100k iterations)
-- Token: HMAC-SHA256 签名的 Base64 JSON
-- 配置存储: data/auth.json
+使用 Python stdlib 實現：
+- 密碼哈希: hashlib.pbkdf2_hmac (SHA-256, 100k iterations)
+- Token: HMAC-SHA256 籤名的 Base64 JSON
+- 配置存儲: data/auth.json
 
 用法:
-  首次运行时通过 /api/auth/setup 设置密码
-  后续通过 /api/auth/login 获取 token
-  API 请求通过 Cookie 或 Authorization header 携带 token
+  首次運行時通過 /api/auth/setup 設置密碼
+  後續通過 /api/auth/login 獲取 token
+  API 請求通過 Cookie 或 Authorization header 攜帶 token
 """
 
 import base64
 import hashlib
 import hmac
 import json
-import os
 import pathlib
 import secrets
 import time
 
-# Token 有效期 24 小时
+# Token 有效期 24 小時
 TOKEN_TTL = 24 * 60 * 60
 
-# auth.json 存储路径（由外部在 server.py 初始化时设置）
+# auth.json 存儲路徑（由外部在 server.py 初始化時設置）
 _auth_file: pathlib.Path | None = None
 _secret_key: bytes | None = None
 
 
 def init(data_dir: pathlib.Path):
-    """初始化认证模块。"""
+    """初始化認證模塊。"""
     global _auth_file, _secret_key
     _auth_file = data_dir / 'auth.json'
-    # 每次启动生成新的签名密钥（重启后旧 token 失效，这是安全特性）
+    # 每次啓動生成新的籤名密鑰（重啓後舊 token 失效，這是安全特性）
     _secret_key = secrets.token_bytes(32)
 
 
 def is_configured() -> bool:
-    """是否已设置密码。"""
+    """是否已設置密碼。"""
     if not _auth_file or not _auth_file.exists():
         return False
     try:
@@ -48,18 +47,18 @@ def is_configured() -> bool:
 
 
 def is_enabled() -> bool:
-    """认证是否启用。仅当 auth.json 存在且配置了密码时启用。"""
+    """認證是否啓用。僅當 auth.json 存在且配置了密碼時啓用。"""
     return is_configured()
 
 
 def setup_password(password: str) -> dict:
-    """首次设置密码。如已设置则拒绝。"""
+    """首次設置密碼。如已設置則拒絕。"""
     if not _auth_file:
-        return {'ok': False, 'error': '认证模块未初始化'}
+        return {'ok': False, 'error': '認證模塊未初始化'}
     if is_configured():
-        return {'ok': False, 'error': '密码已设置，如需重置请删除 data/auth.json'}
+        return {'ok': False, 'error': '密碼已設置，如需重置請刪除 data/auth.json'}
     if len(password) < 4:
-        return {'ok': False, 'error': '密码至少 4 个字符'}
+        return {'ok': False, 'error': '密碼至少 4 個字符'}
 
     salt = secrets.token_hex(16)
     pw_hash = hashlib.pbkdf2_hmac(
@@ -68,11 +67,11 @@ def setup_password(password: str) -> dict:
 
     cfg = {'password_hash': pw_hash, 'salt': salt}
     _auth_file.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
-    return {'ok': True, 'message': '密码已设置'}
+    return {'ok': True, 'message': '密碼已設置'}
 
 
 def verify_password(password: str) -> bool:
-    """校验密码。"""
+    """校驗密碼。"""
     if not _auth_file or not _auth_file.exists():
         return False
     try:
@@ -90,7 +89,7 @@ def verify_password(password: str) -> bool:
 
 
 def create_token() -> str:
-    """创建 JWT-like token。"""
+    """創建 JWT-like token。"""
     if not _secret_key:
         raise RuntimeError('Auth not initialized')
     payload = {
@@ -106,7 +105,7 @@ def create_token() -> str:
 
 
 def verify_token(token: str) -> bool:
-    """验证 token 签名和有效期。"""
+    """驗證 token 籤名和有效期。"""
     if not _secret_key or not token:
         return False
     parts = token.split('.')
@@ -116,7 +115,7 @@ def verify_token(token: str) -> bool:
     expected_sig = hmac.new(_secret_key, payload_b64.encode(), hashlib.sha256).hexdigest()
     if not hmac.compare_digest(sig, expected_sig):
         return False
-    # 解码 payload 检查过期
+    # 解碼 payload 檢查過期
     try:
         padding = 4 - len(payload_b64) % 4
         if padding != 4:
@@ -130,7 +129,7 @@ def verify_token(token: str) -> bool:
 
 
 def extract_token(headers) -> str | None:
-    """从请求头中提取 token (Authorization header 或 Cookie)。"""
+    """從請求頭中提取 token (Authorization header 或 Cookie)。"""
     # Authorization: Bearer <token>
     auth_header = headers.get('Authorization', '')
     if auth_header.startswith('Bearer '):
@@ -144,7 +143,7 @@ def extract_token(headers) -> str | None:
     return None
 
 
-# 不需要认证的路径白名单
+# 不需要認證的路徑白名單
 _PUBLIC_PATHS = frozenset({
     '/healthz',
     '/api/auth/login',
@@ -152,21 +151,21 @@ _PUBLIC_PATHS = frozenset({
     '/api/auth/status',
 })
 
-# 公开的路径前缀（静态资源）
+# 公開的路徑前綴（靜態資源）
 _PUBLIC_PREFIXES = ('/_assets/', '/assets/')
 
 
 def requires_auth(path: str) -> bool:
-    """判断该路径是否需要认证。"""
+    """判斷該路徑是否需要認證。"""
     if not is_enabled():
         return False
-    # 静态页面和资源不拦截
+    # 靜態頁面和資源不攔截
     if path in _PUBLIC_PATHS:
         return False
     for prefix in _PUBLIC_PREFIXES:
         if path.startswith(prefix):
             return False
-    # dashboard 首页不拦截（前端自己处理重定向到登录）
+    # dashboard 首頁不攔截（前端自己處理重定向到登錄）
     if path in ('', '/', '/dashboard', '/dashboard.html'):
         return False
     return True

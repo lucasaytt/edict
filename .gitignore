@@ -1,4 +1,6 @@
 # Runtime data (machine-specific)
+.pids/
+_output/
 data/live_status.json
 data/agent_config.json
 data/model_change_log.json
@@ -16,6 +18,7 @@ data/mission_control_tasks.json
 
 # Environment
 .env
+edict.service.env
 
 # Python
 __pycache__/
@@ -50,3 +53,4 @@ _*.py
 # Generated docs
 *.docx
 *.pdf
+edict.service.env

@@ -1,10 +1,10 @@
-"""Outbox Relay Worker — 轮询 outbox_events 表，投递未发布事件到 Redis Streams。
+"""Outbox Relay Worker — 輪詢 outbox_events 表，投遞未發布事件到 Redis Streams。
 
-Transactional Outbox Pattern 的投递端：
-- 事务层把事件写入 outbox 表（与业务数据同一事务）
-- 本 worker 轮询 unpublished 事件，调用 EventBus.publish 投递到 Redis
-- 投递成功标记 published=True；失败累计 attempts，达到上限进入 DLQ
-- 消费者必须用 event_id 做幂等，防止 relay 重启造成重复投递
+Transactional Outbox Pattern 的投遞端：
+- 事務層把事件寫入 outbox 表（與業務數據同一事務）
+- 本 worker 輪詢 unpublished 事件，調用 EventBus.publish 投遞到 Redis
+- 投遞成功標記 published=True；失敗累計 attempts，達到上限進入 DLQ
+- 消費者必須用 event_id 做冪等，防止 relay 重啓造成重複投遞
 """
 
 import asyncio
@@ -20,13 +20,13 @@ from ..services.event_bus import EventBus
 
 log = logging.getLogger("edict.outbox_relay")
 
-MAX_ATTEMPTS = 5
-BATCH_SIZE = 50
-POLL_INTERVAL = 1.0  # 秒
+MAX_ATTEMPTS = 5       # 最大重試次數，超過後進入 DLQ
+BATCH_SIZE = 50        # 每輪處理的事件數上限
+POLL_INTERVAL = 1.0    # 無事件時輪詢間隔（秒）
 
 
 class OutboxRelay:
-    """轮询 outbox_events 表，投递到 Redis Streams。"""
+    """輪詢 outbox_events 表，投遞到 Redis Streams。"""
 
     def __init__(self):
         self.bus = EventBus()
@@ -52,9 +52,17 @@ class OutboxRelay:
         log.info("Outbox Relay stopped")
 
     async def _relay_cycle(self) -> int:
-        """处理一批未投递事件。返回本轮处理数量。"""
+        """處理一批未投遞事件。返回本輪處理數量。
+
+        查詢策略：
+        - SELECT ... FOR UPDATE SKIP LOCKED: 允許多 relay 實例並行
+          每個實例鎖定不同的批次，不會互相阻塞
+        - 排序 by id 保證 FIFO 投遞順序
+        - 每筆事件投遞成功後標記 published=True + published_at
+        - 投遞失敗累計 attempts，超過 MAX_ATTEMPTS 則寫入 dead_letter topic
+        """
         async with async_session() as db:
-            # FOR UPDATE SKIP LOCKED 允许多 relay 实例并行
+            # FOR UPDATE SKIP LOCKED 允許多 relay 實例並行，各自鎖定不同批次
             stmt = (
                 select(OutboxEvent)
                 .where(OutboxEvent.published == False)  # noqa: E712
@@ -90,7 +98,7 @@ class OutboxRelay:
                     )
 
                     if event.attempts >= MAX_ATTEMPTS:
-                        # 投递到 DLQ
+                        # 投遞到 DLQ
                         try:
                             await self.bus.publish(
                                 topic="dead_letter",
@@ -115,7 +123,7 @@ class OutboxRelay:
 
 
 async def run_outbox_relay():
-    """入口函数 — 用于直接运行 worker。"""
+    """入口函數 — 用於直接運行 worker。"""
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",

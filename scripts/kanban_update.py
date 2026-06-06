@@ -26,6 +26,17 @@
   python3 kanban_update.py todo JJC-20260223-012 1 "实现API接口" in-progress
   python3 kanban_update.py todo JJC-20260223-012 1 "" completed
 
+  # CLI 查看任务清单（默认含「進度」內容，避免只看狀態）
+  python3 kanban_update.py list --active
+  python3 kanban_update.py list --active --full
+  python3 kanban_update.py list --show-id      # 需要時才顯示技術 ID
+  python3 kanban_update.py list --brief        # 只看標題/狀態/部門
+  python3 kanban_update.py list --include-session  # 顯示會話映射項
+
+  # 中文別名
+  python3 kanban_update.py 任務清單 完整
+  python3 kanban_update.py 任務清單 進行中 完整
+
   # 🔥 实时进展汇报（Agent 主动调用，频率不限）
   python3 kanban_update.py progress JJC-20260223-012 "正在分析需求，拟定3个子方案" "1.调研技术选型|2.撰写设计文档|3.实现原型"
 """
@@ -36,6 +47,16 @@ from utils import python_bin
 _BASE = pathlib.Path(os.environ['EDICT_HOME']) if 'EDICT_HOME' in os.environ else pathlib.Path(__file__).resolve().parent.parent
 TASKS_FILE = _BASE / 'data' / 'tasks_source.json'
 REFRESH_SCRIPT = _BASE / 'scripts' / 'refresh_live_data.py'
+
+# ── 統一派發模組 ──────────────────────────────────────────
+# 封裝統一派發邏輯，確保 kanban_update.py 與 Dashboard Server 動作一致
+sys.path.insert(0, str(_BASE / 'scripts'))
+from dispatch import dispatch_for_state
+
+# 方便 dispatch_for_state 內部讀取 task 資料
+def _reload_task(task_id):
+    tasks = atomic_json_read(TASKS_FILE)
+    return next((t for t in tasks if t.get('id') == task_id), None)
 
 log = logging.getLogger('kanban')
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(name)s] %(message)s', datefmt='%H:%M:%S')
@@ -160,17 +181,17 @@ def _append_audit(task_id, agent, action, old_val=None, new_val=None, reason="")
 
 # ── 越权检测（Agent 权限策略）──
 AGENT_POLICY = {
-    "taizi":    {"role": "coordination", "commands": {"create", "state", "flow", "progress", "todo", "memory", "task-memo"}},
-    "zhongshu": {"role": "coordination", "commands": {"state", "flow", "progress", "todo", "memory", "task-memo", "delegate"}},
-    "menxia":   {"role": "coordination", "commands": {"state", "flow", "progress", "todo", "confirm", "memory", "task-memo"}},
-    "shangshu": {"role": "coordination", "commands": {"state", "flow", "progress", "todo", "confirm", "delegate", "memory", "task-memo", "shared-memo"}},
-    "zaochao":  {"role": "coordination", "commands": {"progress", "todo", "memory"}},
-    "hubu":     {"role": "execution", "commands": {"progress", "todo", "done", "block", "memory", "task-memo", "delegate-result"}},
-    "libu":     {"role": "execution", "commands": {"progress", "todo", "done", "block", "memory", "task-memo", "delegate-result"}},
-    "bingbu":   {"role": "execution", "commands": {"progress", "todo", "done", "block", "memory", "task-memo", "delegate-result"}},
-    "xingbu":   {"role": "execution", "commands": {"progress", "todo", "done", "block", "memory", "task-memo", "delegate-result"}},
-    "gongbu":   {"role": "execution", "commands": {"progress", "todo", "done", "block", "memory", "task-memo", "delegate-result"}},
-    "libu_hr":  {"role": "execution", "commands": {"progress", "todo", "done", "block", "memory", "task-memo", "delegate-result"}},
+    "taizi":    {"role": "coordination", "commands": {"create", "state", "flow", "progress", "todo", "memory", "task-memo", "list"}},
+    "zhongshu": {"role": "coordination", "commands": {"state", "flow", "progress", "todo", "memory", "task-memo", "delegate", "list"}},
+    "menxia":   {"role": "coordination", "commands": {"state", "flow", "progress", "todo", "confirm", "memory", "task-memo", "list"}},
+    "shangshu": {"role": "coordination", "commands": {"state", "flow", "progress", "todo", "confirm", "delegate", "memory", "task-memo", "shared-memo", "list"}},
+    "zaochao":  {"role": "coordination", "commands": {"progress", "todo", "memory", "list"}},
+    "hubu":     {"role": "execution", "commands": {"progress", "todo", "done", "block", "memory", "task-memo", "delegate-result", "list"}},
+    "libu":     {"role": "execution", "commands": {"progress", "todo", "done", "block", "memory", "task-memo", "delegate-result", "list"}},
+    "bingbu":   {"role": "execution", "commands": {"progress", "todo", "done", "block", "memory", "task-memo", "delegate-result", "list"}},
+    "xingbu":   {"role": "execution", "commands": {"progress", "todo", "done", "block", "memory", "task-memo", "delegate-result", "list"}},
+    "gongbu":   {"role": "execution", "commands": {"progress", "todo", "done", "block", "memory", "task-memo", "delegate-result", "list"}},
+    "libu_hr":  {"role": "execution", "commands": {"progress", "todo", "done", "block", "memory", "task-memo", "delegate-result", "list"}},
 }
 
 def _check_permission(agent_id, cmd):
@@ -193,6 +214,9 @@ def find_task(tasks, task_id):
 
 # 旨意标题最低要求
 _MIN_TITLE_LEN = 6
+# 正式任務 ID：JJC-YYYYMMDD-NNN（可選：測試 ID）
+_TASK_ID_RE = re.compile(r'^JJC-\d{8}-\d{3}$', re.I)
+_TASK_ID_TEST_RE = re.compile(r'^(?:JJC-TEST-[A-Z0-9-]+|TEST-[A-Z0-9-]+)$', re.I)
 _JUNK_TITLES = {
     '?', '？', '好', '好的', '是', '否', '不', '不是', '对', '了解', '收到',
     '嗯', '哦', '知道了', '开启了么', '可以', '不行', '行', 'ok', 'yes', 'no',
@@ -268,6 +292,19 @@ def _infer_agent_id_from_runtime(task=None):
     return ''
 
 
+def _allow_test_task_ids():
+    return bool(os.environ.get('EDICT_ALLOW_TEST_TASK_ID') == '1' or os.environ.get('PYTEST_CURRENT_TEST'))
+
+
+def _is_valid_task_id(task_id):
+    tid = (task_id or '').strip()
+    if _TASK_ID_RE.fullmatch(tid):
+        return True, ''
+    if _TASK_ID_TEST_RE.fullmatch(tid) and _allow_test_task_ids():
+        return True, ''
+    return False, 'task_id 必須為 JJC-YYYYMMDD-NNN'
+
+
 def _is_valid_task_title(title):
     """校验标题是否足够作为一个旨意任务。"""
     t = (title or '').strip()
@@ -287,8 +324,14 @@ def _is_valid_task_title(title):
     return True, ''
 
 
-def cmd_create(task_id, title, state, org, official, remark=None):
+def cmd_create(task_id, title, state, org, official, remark=None, source=None):
     """新建任务（收旨时立即调用）"""
+    # 任務 ID 校驗
+    valid_id, reason_id = _is_valid_task_id(task_id)
+    if not valid_id:
+        log.warning(f'⚠️ 拒绝创建 {task_id}：{reason_id}')
+        print(f'[看板] 拒绝创建：{reason_id}', flush=True)
+        return
     # 清洗标题（剥离元数据）
     title = _sanitize_title(title)
     # 旨意标题校验
@@ -299,6 +342,11 @@ def cmd_create(task_id, title, state, org, official, remark=None):
         return
     actual_org = STATE_ORG_MAP.get(state, org)
     clean_remark = _sanitize_remark(remark) if remark else f"下旨：{title}"
+    # 解析 source（格式：telegram:493683906 或 feishu:xxx）
+    source_info = None
+    if source:
+        parts = source.split(':', 1)
+        source_info = {"channel": parts[0], "target": parts[1] if len(parts) > 1 else None}
     def modifier(tasks):
         existing = next((t for t in tasks if t.get('id') == task_id), None)
         if existing:
@@ -308,17 +356,23 @@ def cmd_create(task_id, title, state, org, official, remark=None):
             if existing.get('state') not in (None, '', 'Inbox', 'Pending'):
                 log.warning(f'任务 {task_id} 已存在 (state={existing["state"]})，将被覆盖')
         tasks = [t for t in tasks if t.get('id') != task_id]
-        tasks.insert(0, {
+        task_entry = {
             "id": task_id, "title": title, "official": official,
             "org": actual_org, "state": state,
             "now": clean_remark[:60] if remark else f"已下旨，等待{actual_org}接旨",
             "eta": "-", "block": "无", "output": "", "ac": "",
             "flow_log": [{"at": now_iso(), "from": "皇上", "to": actual_org, "remark": clean_remark}],
             "updatedAt": now_iso()
-        })
+        }
+        if source_info:
+            task_entry["source"] = source_info
+        tasks.insert(0, task_entry)
         return tasks
     atomic_json_update(TASKS_FILE, modifier, [])
     _trigger_refresh()
+    task = _reload_task(task_id)
+    if task:
+        dispatch_for_state(task_id, task, state, trigger='create')
     log.info(f'✅ 创建 {task_id} | {title[:30]} | state={state}')
     _append_audit(task_id, _infer_agent_id_from_runtime(), 'create', None, state, title)
 
@@ -411,6 +465,9 @@ def cmd_state(task_id, new_state, now_text=None):
     else:
         log.info(f'✅ {task_id} 状态更新: {old_state[0]} → {new_state}')
         _append_audit(task_id, _infer_agent_id_from_runtime(), 'state', old_state[0], new_state, now_text or '')
+        task = _reload_task(task_id)
+        if task:
+            dispatch_for_state(task_id, task, new_state, 'state')
 
 
 def cmd_flow(task_id, from_dept, to_dept, remark):
@@ -447,10 +504,6 @@ def cmd_done(task_id, output_path='', summary=''):
             log.error(f'任务 {task_id} 不存在')
             return tasks
         old_state = t.get('state')
-        if old_state not in ('Doing', 'Next'):
-            rejected[0] = True
-            reject_reason[0] = f'当前状态 {old_state} 不允许直接上报完成'
-            return tasks
         completed, total = _todo_counts(t)
         if total > 0 and completed < total:
             rejected[0] = True
@@ -458,14 +511,30 @@ def cmd_done(task_id, output_path='', summary=''):
             return tasks
 
         from_org = t.get('org', '执行部门')
-        t['state'] = 'Review'
-        t['org'] = STATE_ORG_MAP.get('Review', t.get('org', ''))
-        t['output'] = output_path
-        t['now'] = summary or '执行已完成，提交尚书省汇总审查'
-        t.setdefault('flow_log', []).append({
-            "at": now_iso(), "from": from_org,
-            "to": "尚书省", "remark": f"✅ 执行完成，提交审查：{summary or '待尚书省汇总'}"
-        })
+        # 新流程：执行态回报进入 Review
+        if old_state in ('Doing', 'Next'):
+            t['state'] = 'Review'
+            t['org'] = STATE_ORG_MAP.get('Review', t.get('org', ''))
+            t['output'] = output_path
+            t['now'] = summary or '执行已完成，提交尚书省汇总审查'
+            t.setdefault('flow_log', []).append({
+                "at": now_iso(), "from": from_org,
+                "to": "尚书省", "remark": f"✅ 执行完成，提交审查：{summary or '待尚书省汇总'}"
+            })
+        # 兼容旧流程：中书/门下等状态可直接 Done
+        elif old_state in ('Zhongshu', 'Menxia', 'Assigned', 'Taizi', 'Inbox', 'Pending', 'PendingConfirm', 'Review'):
+            t['state'] = 'Done'
+            t['org'] = STATE_ORG_MAP.get('Done', t.get('org', ''))
+            t['output'] = output_path
+            t['now'] = summary or '任务已完成'
+            t.setdefault('flow_log', []).append({
+                "at": now_iso(), "from": from_org,
+                "to": "完成", "remark": f"✅ 任务完成：{summary or '完成'}"
+            })
+        else:
+            rejected[0] = True
+            reject_reason[0] = f'当前状态 {old_state} 不允许直接上报完成'
+            return tasks
         # 同步设置 outputMeta，避免依赖 refresh_live_data.py 异步补充
         if output_path:
             p = pathlib.Path(output_path)
@@ -484,6 +553,9 @@ def cmd_done(task_id, output_path='', summary=''):
         return
     log.info(f'✅ {task_id} 执行完成，已提交尚书省审查')
     _append_audit(task_id, _infer_agent_id_from_runtime(), 'done', None, 'Review', summary or '')
+    task = _reload_task(task_id)
+    if task:
+        dispatch_for_state(task_id, task, task.get('state', 'Review'), 'done')
 
 
 def cmd_block(task_id, reason):
@@ -937,6 +1009,163 @@ def cmd_delegate_result(sub_task_id, result_json):
     log.info(f'✅ 委派结果 {sub_task_id} → 父任务 {parent_id}')
     _append_audit(parent_id, to_agent, 'delegate_result', sub_task_id, None, result_json[:100])
 
+
+
+# ── 向后兼容函数（供 dashboard/server.py 与旧测试调用）──
+def create_task_from_intent(task_id, title, state='Zhongshu', org='中书省', official='中书令', remark=None, source=None):
+    return cmd_create(task_id, title, state, org, official, remark=remark, source=source)
+
+
+def set_task_state(task_id, new_state, note=''):
+    return cmd_state(task_id, new_state, note)
+
+
+def record_task_flow(task_id, from_dept, to_dept, remark):
+    return cmd_flow(task_id, from_dept, to_dept, remark)
+
+
+def report_task_progress(task_id, now_text, todos=''):
+    return cmd_progress(task_id, now_text, todos)
+
+
+def complete_task(task_id, output='', summary=''):
+    return cmd_done(task_id, output, summary)
+
+
+def block_task(task_id, reason):
+    return cmd_block(task_id, reason)
+
+
+def _short_text(value, max_len=42):
+    s = (value or '').strip()
+    if len(s) <= max_len:
+        return s
+    return s[:max_len] + '…'
+
+
+def _todo_brief(task):
+    todos = task.get('todos') or []
+    if not todos:
+        return '無'
+    total = len(todos)
+    done = sum(1 for td in todos if td.get('status') == 'completed')
+    return f'{done}/{total} 完成'
+
+
+def _report_brief(task):
+    """回奏內容優先：先取進度/結案語，再回退到需求字段。"""
+    cands = []
+
+    # 1) 最新進度（最接近太子對皇上的回奏語氣）
+    progress_log = task.get('progress_log') or []
+    if progress_log:
+        last_p = progress_log[-1]
+        ptxt = (last_p.get('text') or '').strip()
+        if ptxt:
+            cands.append(ptxt)
+
+    # 2) now（看板當前動態）
+    now_txt = (task.get('now') or '').strip()
+    if now_txt:
+        cands.append(now_txt)
+
+    # 3) 流轉原因（最近一次）
+    flow_log = task.get('flow_log') or []
+    if flow_log:
+        last = flow_log[-1]
+        flow_reason = (last.get('reason') or last.get('remark') or '').strip()
+        if flow_reason:
+            cands.append(flow_reason)
+
+    # 4) 其他補充字段
+    for key in ('output', 'ac', 'description', 'remark'):
+        val = (task.get(key) or '').strip()
+        if val:
+            cands.append(val)
+
+    for c in cands:
+        if c and c not in ('無', '-'):
+            return _short_text(c, 100)
+    return '（目前尚無可回奏內容）'
+
+
+def cmd_list(state='', active_only=False, show_id=False, limit=0, brief=False, full=False, include_session=False):
+    """列出任務清單（預設顯示可讀內容，避免只見技術 ID）。"""
+    tasks = atomic_json_read(TASKS_FILE) or []
+
+    def _is_session_mirror(t):
+        tid = (t.get('id') or '')
+        desc = (t.get('description') or '')
+        title = (t.get('title') or '')
+        return tid.startswith('OC-') or 'runtime sessions' in desc or title.endswith('會話')
+
+    def _is_standard_id(t):
+        tid = (t.get('id') or '').strip()
+        if _TASK_ID_RE.fullmatch(tid):
+            return True
+        if _TASK_ID_TEST_RE.fullmatch(tid) and _allow_test_task_ids():
+            return True
+        return False
+
+    if not include_session:
+        tasks = [t for t in tasks if not _is_session_mirror(t)]
+
+    nonstandard = [t for t in tasks if not _is_standard_id(t)]
+    tasks = [t for t in tasks if _is_standard_id(t)]
+
+    if state:
+        tasks = [t for t in tasks if (t.get('state') or '').lower() == state.lower()]
+    if active_only:
+        tasks = [t for t in tasks if t.get('state') not in ('Done', 'Cancelled')]
+
+    try:
+        limit = int(limit) if limit else 0
+    except Exception:
+        limit = 0
+    if limit > 0:
+        tasks = tasks[:limit]
+
+    if not tasks:
+        if nonstandard:
+            print(f'目前沒有符合條件的任務（已過濾 {len(nonstandard)} 筆非規範ID）')
+            print('非規範ID示例：')
+            for i, t in enumerate(nonstandard[:5], 1):
+                print(f"  {i}. {(t.get('id') or '-') }｜{(t.get('state') or '-') }｜{_short_text(t.get('title') or '（無標題）', 40)}")
+        else:
+            print('目前沒有符合條件的任務')
+        return
+
+    if nonstandard:
+        print(f'任務清單（共 {len(tasks)} 筆，已過濾 {len(nonstandard)} 筆非規範ID）')
+    else:
+        print(f'任務清單（共 {len(tasks)} 筆）')
+    for i, t in enumerate(tasks, 1):
+        title = (t.get('title') or '（無標題）').strip()
+        state_txt = t.get('state') or '-'
+        org_txt = t.get('org') or '-'
+        head = f"{i}. {title}｜{state_txt}｜{org_txt}"
+        if show_id:
+            head += f"｜{t.get('id','-')}"
+        print(head)
+
+        if brief:
+            continue
+
+        now_txt = _short_text(t.get('now') or '（無進度描述）', 60)
+        print(f"   進度：{now_txt}")
+
+        if full:
+            report = _report_brief(t)
+            print(f"   回奏：{report}")
+            print(f"   子任務：{_todo_brief(t)}")
+            flow_log = t.get('flow_log') or []
+            if flow_log:
+                last = flow_log[-1]
+                f_from = last.get('from') or '-'
+                f_to = last.get('to') or '-'
+                f_reason = _short_text(last.get('reason') or last.get('remark') or '', 50)
+                print(f"   最近流轉：{f_from} → {f_to}（{f_reason or '無'}）")
+
 _CMD_MIN_ARGS = {
     'create': 6, 'state': 3, 'flow': 5, 'done': 2, 'block': 3, 'confirm': 3,
     'todo': 4, 'progress': 3,
@@ -949,7 +1178,13 @@ if __name__ == '__main__':
     if not args:
         print(__doc__)
         sys.exit(0)
-    cmd = args[0]
+
+    # 中文命令別名：任務清單 [完整|簡略|進行中]
+    raw_cmd = args[0]
+    cmd = raw_cmd
+    if raw_cmd in ('任務清單', '任务清单'):
+        cmd = 'list'
+
     if cmd in _CMD_MIN_ARGS and len(args) < _CMD_MIN_ARGS[cmd]:
         print(f'错误："{cmd}" 命令至少需要 {_CMD_MIN_ARGS[cmd]} 个参数，实际 {len(args)} 个')
         print(__doc__)
@@ -957,7 +1192,16 @@ if __name__ == '__main__':
     # 越权检测：推断当前 Agent 身份，校验是否有权执行该命令
     _check_permission(_infer_agent_id_from_runtime(), cmd)
     if cmd == 'create':
-        cmd_create(args[1], args[2], args[3], args[4], args[5], args[6] if len(args)>6 else None)
+        # 解析可選 --source 參數（格式：telegram:493683906 或 feishu:xxx）
+        create_source = None
+        create_pos = [args[1], args[2], args[3], args[4], args[5]]
+        for i in range(6, len(args)):
+            if args[i].startswith('--source=') and i + 1 <= len(args):
+                create_source = args[i].split('=', 1)[1]
+            elif args[i] == '--source' and i + 1 < len(args):
+                create_source = args[i + 1]
+                i += 1
+        cmd_create(*create_pos, remark=args[6] if len(args)>6 else None, source=create_source)
     elif cmd == 'state':
         cmd_state(args[1], args[2], args[3] if len(args)>3 else None)
     elif cmd == 'flow':
@@ -1021,6 +1265,46 @@ if __name__ == '__main__':
                      args[5] if len(args) > 5 else '')
     elif cmd == 'delegate-result':
         cmd_delegate_result(args[1], args[2])
+    elif cmd == 'list':
+        show_id = '--show-id' in args
+        active_only = '--active' in args
+        brief = '--brief' in args
+        full = '--full' in args
+        include_session = '--include-session' in args
+        state = ''
+        limit = 0
+
+        # 支援 TG/中文參數詞
+        for tok in args[1:]:
+            t = str(tok).strip().lower()
+            if t in ('完整', '完整版', 'full'):
+                full = True
+            elif t in ('簡略', '简略', 'brief'):
+                brief = True
+            elif t in ('進行中', '进行中', 'active'):
+                active_only = True
+            elif t in ('顯示id', '显示id', 'show-id'):
+                show_id = True
+            elif t in ('含會話', '含会话', 'include-session'):
+                include_session = True
+
+        i = 1
+        while i < len(args):
+            if args[i] == '--state' and i + 1 < len(args):
+                state = args[i + 1]; i += 2
+            elif args[i] == '--limit' and i + 1 < len(args):
+                limit = args[i + 1]; i += 2
+            else:
+                i += 1
+        cmd_list(
+            state=state,
+            active_only=active_only,
+            show_id=show_id,
+            limit=limit,
+            brief=brief,
+            full=full,
+            include_session=include_session,
+        )
     else:
         print(__doc__)
         sys.exit(1)

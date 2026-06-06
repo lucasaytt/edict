@@ -1,13 +1,13 @@
 """
-文件锁工具 — 防止多进程并发读写 JSON 文件导致数据丢失。
+文件鎖工具 — 防止多進程並發讀寫 JSON 文件導致數據丟失。
 
 用法:
     from file_lock import atomic_json_update, atomic_json_read
 
-    # 原子读取
+    # 原子讀取
     data = atomic_json_read(path, default=[])
 
-    # 原子更新（读 → 修改 → 写回，全程持锁）
+    # 原子更新（讀 → 修改 → 寫回，全程持鎖）
     def modifier(tasks):
         tasks.append(new_task)
         return tasks 
@@ -27,10 +27,10 @@ else:
     import fcntl
 
 
-# ── 平台抽象：文件锁 ────────────────────────────────────────────
+# ── 平臺抽象：文件鎖 ────────────────────────────────────────────
 
 def _lock_shared(fd: int) -> None:
-    """获取共享锁（读锁）。"""
+    """獲取共享鎖（讀鎖）。"""
     if _IS_WINDOWS:
         msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
     else:
@@ -38,7 +38,7 @@ def _lock_shared(fd: int) -> None:
 
 
 def _lock_exclusive(fd: int) -> None:
-    """获取排他锁（写锁）。"""
+    """獲取排他鎖（寫鎖）。"""
     if _IS_WINDOWS:
         msvcrt.locking(fd, msvcrt.LK_LOCK, 1)
     else:
@@ -46,7 +46,7 @@ def _lock_exclusive(fd: int) -> None:
 
 
 def _unlock(fd: int) -> None:
-    """释放锁。"""
+    """釋放鎖。"""
     if _IS_WINDOWS:
         try:
             msvcrt.locking(fd, msvcrt.LK_UNLCK, 1)
@@ -61,7 +61,7 @@ def _lock_path(path: pathlib.Path) -> pathlib.Path:
 
 
 def atomic_json_read(path: pathlib.Path, default: Any = None) -> Any:
-    """持锁读取 JSON 文件。"""
+    """持鎖讀取 JSON 文件。"""
     lock_file = _lock_path(path)
     lock_file.parent.mkdir(parents=True, exist_ok=True)
     fd = os.open(str(lock_file), os.O_CREAT | os.O_RDWR)
@@ -82,9 +82,9 @@ def atomic_json_update(
     default: Any = None,
 ) -> Any:
     """
-    原子地读取 → 修改 → 写回 JSON 文件。
-    modifier(data) 应返回修改后的数据。
-    使用临时文件 + rename 保证写入原子性。
+    原子地讀取 → 修改 → 寫回 JSON 文件。
+    modifier(data) 應返回修改後的數據。
+    使用臨時文件 + rename 保證寫入原子性。
     """
     lock_file = _lock_path(path)
     lock_file.parent.mkdir(parents=True, exist_ok=True)
@@ -116,8 +116,8 @@ def atomic_json_update(
 
 
 def atomic_json_write(path: pathlib.Path, data: Any) -> None:
-    """原子写入 JSON 文件（持排他锁 + tmpfile rename）。
-    直接写入，不读取现有内容（避免 atomic_json_update 的多余读开销）。
+    """原子寫入 JSON 文件（持排他鎖 + tmpfile rename）。
+    直接寫入，不讀取現有內容（避免 atomic_json_update 的多餘讀開銷）。
     """
     lock_file = _lock_path(path)
     lock_file.parent.mkdir(parents=True, exist_ok=True)
