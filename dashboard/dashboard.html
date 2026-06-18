@@ -679,45 +679,46 @@
   <!-- HEADER -->
   <div class="hdr">
     <div>
-      <div class="logo">⚔️ 军机处 · 三省六部总控台</div>
-      <div class="sub">皇上视角 · 实时旨意追踪</div>
+      <div class="logo" data-i18n="brand.title">⚔️ 军机处 · 三省六部总控台</div>
+      <div class="sub" data-i18n="brand.subtitle">皇上视角 · 实时旨意追踪</div>
     </div>
     <div class="hdr-r">
+      <button class="theme-toggle" onclick="toggleLang()" id="lang-btn" title="切换语言">EN</button>
       <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="切换主题">🌙</button>
-      <button class="theme-toggle" onclick="openFeedback()" title="祈告上苍（反馈问题或建议）">🙏 祈告上苍</button>
-      <span class="chip" id="chip-sync">⟳ 同步中</span>
-      <span class="chip" id="chip-tasks">— 旨意</span>
-      <button class="btn-refresh" onclick="loadAll()">⟳ 立即刷新</button>
+      <button class="theme-toggle" onclick="openFeedback()" title="祈告上苍（反馈问题或建议）" data-i18n-title="btn.feedback">🙏 祈告上苍</button>
+      <span class="chip" id="chip-sync" data-i18n="chip.syncing">⟳ 同步中</span>
+      <span class="chip" id="chip-tasks" data-i18n="chip.edicts">— 旨意</span>
+      <button class="btn-refresh" onclick="loadAll()" data-i18n="btn.refresh">⟳ 立即刷新</button>
       <span id="cd"></span>
     </div>
   </div>
 
   <!-- TABS -->
   <div class="tabs">
-    <div class="tab active" data-tab="edicts">📜 旨意看板 <span class="tbadge" id="tb-e">0</span></div>
-    <div class="tab" data-tab="monitor">🔭 省部调度 <span class="tbadge" id="tb-m">0</span></div>
-    <div class="tab" data-tab="officials">👥 官员总览</div>
-    <div class="tab" data-tab="models">⚙️ 模型配置</div>
-    <div class="tab" data-tab="skills">🛠️ 技能配置</div>
-    <div class="tab" data-tab="sessions">💬 小任务 <span class="tbadge" id="tb-s">0</span></div>
-    <div class="tab" data-tab="memorials">📜 奏折阁 <span class="tbadge" id="tb-mem">0</span></div>
-    <div class="tab" data-tab="templates">📜 旨库</div>
-    <div class="tab" data-tab="morning">📰 天下要闻</div>
+    <div class="tab active" data-tab="edicts" data-i18n="tab.edicts">📜 旨意看板 <span class="tbadge" id="tb-e">0</span></div>
+    <div class="tab" data-tab="monitor" data-i18n="tab.monitor">🔭 省部调度 <span class="tbadge" id="tb-m">0</span></div>
+    <div class="tab" data-tab="officials" data-i18n="tab.officials">👥 官员总览</div>
+    <div class="tab" data-tab="models" data-i18n="tab.models">⚙️ 模型配置</div>
+    <div class="tab" data-tab="skills" data-i18n="tab.skills">🛠️ 技能配置</div>
+    <div class="tab" data-tab="sessions" data-i18n="tab.sessions">💬 小任务 <span class="tbadge" id="tb-s">0</span></div>
+    <div class="tab" data-tab="memorials" data-i18n="tab.memorials">📜 奏折阁 <span class="tbadge" id="tb-mem">0</span></div>
+    <div class="tab" data-tab="templates" data-i18n="tab.templates">📜 旨库</div>
+    <div class="tab" data-tab="morning" data-i18n="tab.morning">📰 天下要闻</div>
   </div>
 
   <!-- ══ 旨意看板 ══ -->
   <div class="panel active" id="panel-edicts">
     <div class="archive-bar" id="archive-bar">
-      <span class="ab-label">📋 筛选：</span>
-      <button class="ab-btn active" data-filter="active" onclick="setEdictFilter('active')">🔥 进行中</button>
-      <button class="ab-btn" data-filter="archived" onclick="setEdictFilter('archived')">📦 已归档</button>
-      <button class="ab-btn" data-filter="all" onclick="setEdictFilter('all')">全部</button>
+      <span class="ab-label" data-i18n="filter.label">📋 筛选：</span>
+      <button class="ab-btn active" data-filter="active" onclick="setEdictFilter('active')" data-i18n="filter.active">🔥 进行中</button>
+      <button class="ab-btn" data-filter="archived" onclick="setEdictFilter('archived')" data-i18n="filter.archived">📦 已归档</button>
+      <button class="ab-btn" data-filter="all" onclick="setEdictFilter('all')" data-i18n="filter.all">全部</button>
       <span class="ab-count" id="archive-count"></span>
-      <button class="ab-scan" id="btn-global-scan" onclick="runGlobalSchedulerScan()">🧭 太子巡检</button>
-      <span class="ab-scan-status" id="global-scan-status">未巡检</span>
-      <button class="ab-scan-detail" id="btn-global-scan-detail" onclick="toggleGlobalScanDetails()" style="display:none">查看巡检详情</button>
-      <button class="ab-scan-copy" id="btn-global-scan-copy" onclick="copyGlobalScanReport()" style="display:none">📋 复制巡检报告</button>
-      <button class="ab-archive-all" id="btn-archive-done" onclick="archiveAllDone()" style="display:none">📦 一键归档已完成</button>
+      <button class="ab-scan" id="btn-global-scan" onclick="runGlobalSchedulerScan()" data-i18n="scan.button">🧭 太子巡检</button>
+      <span class="ab-scan-status" id="global-scan-status" data-i18n="scan.no_scan">未巡检</span>
+      <button class="ab-scan-detail" id="btn-global-scan-detail" onclick="toggleGlobalScanDetails()" style="display:none" data-i18n="scan.view_detail">查看巡检详情</button>
+      <button class="ab-scan-copy" id="btn-global-scan-copy" onclick="copyGlobalScanReport()" style="display:none" data-i18n="scan.copy_report">📋 复制巡检报告</button>
+      <button class="ab-archive-all" id="btn-archive-done" onclick="archiveAllDone()" style="display:none" data-i18n="archive.all_done">📦 一键归档已完成</button>
     </div>
     <div class="global-scan-detail" id="global-scan-detail"></div>
     <div id="edict-grid" class="edict-grid"></div>
@@ -726,7 +727,7 @@
   <!-- ══ 省部调度 ══ -->
   <div class="panel" id="panel-monitor">
     <div id="agent-status-panel"></div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">各省部当前承接旨意与执行状态 · 每5秒自动刷新</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px" data-i18n="monitor.desc">各省部当前承接旨意与执行状态 · 每5秒自动刷新</div>
     <div class="duty-grid" id="duty-grid"></div>
   </div>
 
@@ -736,40 +737,40 @@
     <div id="off-kpi" class="off-kpi"></div>
     <div class="off-layout">
       <div id="off-ranklist" class="off-ranklist"></div>
-      <div id="off-detail" class="off-detail"><div class="od-empty">← 点击左侧官员查看详情</div></div>
+      <div id="off-detail" class="off-detail"><div class="od-empty" data-i18n="official.click_detail">← 点击左侧官员查看详情</div></div>
     </div>
   </div>
 
   <!-- ══ 模型配置 ══ -->
   <div class="panel" id="panel-models">
-    <div class="sec-title" style="margin-bottom:14px">各省部 · 模型配置 <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--muted)">— 更改后自动重启 Gateway（约5秒）</span></div>
+    <div class="sec-title" style="margin-bottom:14px" data-i18n="model.title">各省部 · 模型配置 <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--muted)" data-i18n="model.subtitle">— 更改后自动重启 Gateway（约5秒）</span></div>
     <div class="model-grid" id="model-grid"></div>
-    <div class="cl-wrap"><div class="cl-title">变更记录</div><div id="cl-list"></div></div>
+    <div class="cl-wrap"><div class="cl-title" data-i18n="model.changelog">变更记录</div><div id="cl-list"></div></div>
   </div>
 
   <!-- ══ 技能配置 ══ -->
   <div class="panel" id="panel-skills">
-    <div class="sec-title" style="margin-bottom:14px">各省部 · Skills 配置 <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--muted)">— 点击技能查看详情，底部可添加新技能</span></div>
+    <div class="sec-title" style="margin-bottom:14px" data-i18n="skills.title">各省部 · Skills 配置 <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--muted)" data-i18n="skills.subtitle">— 点击技能查看详情，底部可添加新技能</span></div>
     <div class="skills-grid" id="skills-grid"></div>
   </div>
 
   <!-- ══ 小任务/会话监控 ══ -->
   <div class="panel" id="panel-sessions">
-    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">飞书/Telegram 中的日常对话与小任务 · 非JJC圣旨类任务</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px" data-i18n="session.desc">飞书/Telegram 中的日常对话与小任务 · 非JJC圣旨类任务</div>
     <div class="sess-filters">
-      <span style="font-size:11px;color:var(--muted)">筛选：</span>
-      <span class="sess-filter active" data-sf="all" onclick="filterSessions('all',this)">全部</span>
-      <span class="sess-filter" data-sf="active" onclick="filterSessions('active',this)">进行中</span>
-      <span class="sess-filter" data-sf="zhongshu" onclick="filterSessions('zhongshu',this)">中书省</span>
-      <span class="sess-filter" data-sf="shangshu" onclick="filterSessions('shangshu',this)">尚书省</span>
-      <span class="sess-filter" data-sf="libu" onclick="filterSessions('libu',this)">礼部</span>
-      <span class="sess-filter" data-sf="hubu" onclick="filterSessions('hubu',this)">户部</span>
-      <span class="sess-filter" data-sf="bingbu" onclick="filterSessions('bingbu',this)">兵部</span>
-      <span class="sess-filter" data-sf="xingbu" onclick="filterSessions('xingbu',this)">刑部</span>
-      <span class="sess-filter" data-sf="gongbu" onclick="filterSessions('gongbu',this)">工部</span>
-      <span class="sess-filter" data-sf="libu_hr" onclick="filterSessions('libu_hr',this)">吏部</span>
-      <span class="sess-filter" data-sf="menxia" onclick="filterSessions('menxia',this)">门下省</span>
-      <span class="sess-filter" data-sf="zaochao" onclick="filterSessions('zaochao',this)">钦天监</span>
+      <span style="font-size:11px;color:var(--muted)" data-i18n="session.filter_label">筛选：</span>
+      <span class="sess-filter active" data-sf="all" onclick="filterSessions('all',this)" data-i18n="filter.all">全部</span>
+      <span class="sess-filter" data-sf="active" onclick="filterSessions('active',this)" data-i18n="filter.active">进行中</span>
+      <span class="sess-filter" data-sf="zhongshu" onclick="filterSessions('zhongshu',this)" data-i18n="dept.zhongshu">中书省</span>
+      <span class="sess-filter" data-sf="shangshu" onclick="filterSessions('shangshu',this)" data-i18n="dept.shangshu">尚书省</span>
+      <span class="sess-filter" data-sf="libu" onclick="filterSessions('libu',this)" data-i18n="dept.libu">礼部</span>
+      <span class="sess-filter" data-sf="hubu" onclick="filterSessions('hubu',this)" data-i18n="dept.hubu">户部</span>
+      <span class="sess-filter" data-sf="bingbu" onclick="filterSessions('bingbu',this)" data-i18n="dept.bingbu">兵部</span>
+      <span class="sess-filter" data-sf="xingbu" onclick="filterSessions('xingbu',this)" data-i18n="dept.xingbu">刑部</span>
+      <span class="sess-filter" data-sf="gongbu" onclick="filterSessions('gongbu',this)" data-i18n="dept.gongbu">工部</span>
+      <span class="sess-filter" data-sf="libu_hr" onclick="filterSessions('libu_hr',this)" data-i18n="dept.libu_hr">吏部</span>
+      <span class="sess-filter" data-sf="menxia" onclick="filterSessions('menxia',this)" data-i18n="dept.menxia">门下省</span>
+      <span class="sess-filter" data-sf="zaochao" onclick="filterSessions('zaochao',this)" data-i18n="dept.qintianjian">钦天监</span>
     </div>
     <div id="sess-grid" class="sess-grid"></div>
   </div>
@@ -778,13 +779,13 @@
   <div class="panel" id="panel-memorials">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
       <div style="flex:1">
-        <div class="sec-title" style="margin-bottom:2px">📜 奏折阁 · 旨意存档</div>
-        <div style="font-size:11px;color:var(--muted)">任务完成后自动生成奏折，记录从下旨到完成的完整过程</div>
+        <div class="sec-title" style="margin-bottom:2px" data-i18n="memorial.title">📜 奏折阁 · 旨意存档</div>
+        <div style="font-size:11px;color:var(--muted)" data-i18n="memorial.desc">任务完成后自动生成奏折，记录从下旨到完成的完整过程</div>
       </div>
       <select id="mem-filter" onchange="renderMemorials()" style="font-size:11px;padding:4px 10px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;color:var(--text);outline:none">
-        <option value="all">全部</option>
-        <option value="Done">已完成</option>
-        <option value="Cancelled">已取消</option>
+        <option value="all" data-i18n="memorial.filter_all">全部</option>
+        <option value="Done" data-i18n="memorial.filter_done">已完成</option>
+        <option value="Cancelled" data-i18n="memorial.filter_cancelled">已取消</option>
       </select>
     </div>
     <div id="mem-list" class="mem-list"></div>
@@ -794,23 +795,23 @@
   <div class="panel" id="panel-templates">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
       <div style="flex:1">
-        <div class="sec-title" style="margin-bottom:2px">📜 旨库 · 圣旨模板</div>
-        <div style="font-size:11px;color:var(--muted)">选择模板、填写参数、一键下旨 — 降低使用门槛，快速启动任务</div>
+        <div class="sec-title" style="margin-bottom:2px" data-i18n="tpl.title">📜 旨库 · 圣旨模板</div>
+        <div style="font-size:11px;color:var(--muted)" data-i18n="tpl.desc">选择模板、填写参数、一键下旨 — 降低使用门槛，快速启动任务</div>
       </div>
     </div>
     <div class="tpl-cats" id="tpl-cats"></div>
     <div class="tpl-grid" id="tpl-grid"></div>
     <!-- 自由下旨 -->
     <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--line)">
-      <div style="font-size:13px;font-weight:700;margin-bottom:8px">✍️ 自由下旨</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">无需模板，直接用自然语言描述你的需求，系统会自动派发给太子处理</div>
-      <textarea id="free-edict-input" style="width:100%;min-height:80px;resize:vertical;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:13px;color:var(--text);font-family:inherit" placeholder="例如：帮我分析一下最近三个月的销售数据趋势，生成图表和报告…"></textarea>
+      <div style="font-size:13px;font-weight:700;margin-bottom:8px" data-i18n="tpl.free_title">✍️ 自由下旨</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px" data-i18n="tpl.free_desc">无需模板，��接用自然语言描述你的需求，系统会自动派发给太子处理</div>
+      <textarea id="free-edict-input" style="width:100%;min-height:80px;resize:vertical;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:13px;color:var(--text);font-family:inherit" placeholder="例如：帮我分析一下最近三个月的销售数据趋势，生成图表和报告…" data-i18n-placeholder="tpl.free_ph"></textarea>
       <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px">
         <select id="free-edict-priority" style="background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--text)">
-          <option value="normal">普通优先级</option>
-          <option value="high">高优先级</option>
+          <option value="normal" data-i18n="tpl.priority_normal">普通优先级</option>
+          <option value="high" data-i18n="tpl.priority_high">高优先级</option>
         </select>
-        <button class="tpl-go" style="padding:8px 20px;font-size:13px" onclick="submitFreeEdict()">📜 下旨</button>
+        <button class="tpl-go" style="padding:8px 20px;font-size:13px" onclick="submitFreeEdict()" data-i18n="tpl.submit">📜 下旨</button>
       </div>
     </div>
   </div>
@@ -819,57 +820,57 @@
   <div class="panel" id="panel-morning">
     <div class="mb-hdr">
       <div>
-        <div class="mb-title">📰 天下要闻 · 御览</div>
-        <div id="mb-subtitle" class="mb-sub">加载中…</div>
+        <div class="mb-title" data-i18n="morning.title">📰 天下要闻 · 御览</div>
+        <div id="mb-subtitle" class="mb-sub" data-i18n="morning.loading">加载中…</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
-        <button class="btn btn-g" onclick="toggleSubConfig()" style="font-size:12px;padding:6px 14px">⚙ 订阅管理</button>
-        <button class="btn btn-g" id="mb-refresh-btn" onclick="refreshNews()" style="font-size:12px;padding:6px 14px">⟳ 立即采集</button>
+        <button class="btn btn-g" onclick="toggleSubConfig()" style="font-size:12px;padding:6px 14px" data-i18n="morning.manage_sub">⚙ 订阅管理</button>
+        <button class="btn btn-g" id="mb-refresh-btn" onclick="refreshNews()" style="font-size:12px;padding:6px 14px" data-i18n="morning.collect_now">⟳ 立即采集</button>
       </div>
     </div>
 
     <!-- 订阅管理面板 -->
     <div id="sub-config" class="sub-config" style="display:none">
       <div class="sub-section">
-        <div class="sub-sec-title">📂 新闻分类 <span style="font-weight:400;font-size:11px;color:var(--muted)">— 勾选启用，取消禁用</span></div>
+        <div class="sub-sec-title" data-i18n="morning.cat_label">📂 新闻分类 <span style="font-weight:400;font-size:11px;color:var(--muted)">— 勾选启用，取消禁用</span></div>
         <div id="sub-cats" class="sub-cats"></div>
       </div>
       <div class="sub-section">
-        <div class="sub-sec-title">🔑 自定义关注词 <span style="font-weight:400;font-size:11px;color:var(--muted)">— 额外关键词过滤</span></div>
+        <div class="sub-sec-title" data-i18n="morning.kw_label">🔑 自定义关注词 <span style="font-weight:400;font-size:11px;color:var(--muted)">— 额外关键词过滤</span></div>
         <div id="sub-keywords" class="sub-kw-list"></div>
         <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="new-kw" class="sub-input" placeholder="输入关键词，如：芯片、SpaceX…" onkeydown="if(event.key==='Enter')addKeyword()">
-          <button class="btn btn-p" onclick="addKeyword()" style="font-size:12px;padding:6px 14px">添加</button>
+          <input id="new-kw" class="sub-input" placeholder="输入关键词，如：芯片、SpaceX…" onkeydown="if(event.key==='Enter')addKeyword()" data-i18n-placeholder="morning.kw_ph">
+          <button class="btn btn-p" onclick="addKeyword()" style="font-size:12px;padding:6px 14px" data-i18n="morning.kw_add">添加</button>
         </div>
       </div>
       <div class="sub-section">
-        <div class="sub-sec-title">📡 自定义 RSS 源</div>
+        <div class="sub-sec-title" data-i18n="morning.rss_label">📡 自定义 RSS 源</div>
         <div id="sub-feeds" class="sub-feed-list"></div>
         <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-          <input id="new-feed-name" class="sub-input" placeholder="源名称" style="max-width:120px">
+          <input id="new-feed-name" class="sub-input" placeholder="源名称" style="max-width:120px" data-i18n-placeholder="morning.rss_name_ph">
           <input id="new-feed-url" class="sub-input" placeholder="RSS URL" style="flex:1">
           <select id="new-feed-cat" class="sub-input" style="max-width:130px"></select>
-          <button class="btn btn-p" onclick="addFeed()" style="font-size:12px;padding:6px 14px">添加</button>
+          <button class="btn btn-p" onclick="addFeed()" style="font-size:12px;padding:6px 14px" data-i18n="morning.kw_add">添加</button>
         </div>
       </div>
       <div class="sub-section">
-        <div class="sub-sec-title">🔔 消息推送</div>
+        <div class="sub-sec-title" data-i18n="morning.push_label">🔔 消息推送</div>
         <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
           <select id="notification-channel" class="sub-input" style="max-width:160px">
-            <option value="feishu">💬 飞书 Feishu</option>
-            <option value="wecom">📱 企业微信</option>
-            <option value="telegram">✈️ Telegram</option>
-            <option value="discord">🎮 Discord</option>
-            <option value="slack">💬 Slack</option>
-            <option value="webhook">🔗 通用 Webhook</option>
+            <option value="feishu" data-i18n="notify.feishu">💬 飞书 Feishu</option>
+            <option value="wecom" data-i18n="notify.wecom">📱 企业微信</option>
+            <option value="telegram" data-i18n="notify.telegram">✈️ Telegram</option>
+            <option value="discord" data-i18n="notify.discord">🎮 Discord</option>
+            <option value="slack" data-i18n="notify.slack">💬 Slack</option>
+            <option value="webhook" data-i18n="notify.webhook">🔗 通用 Webhook</option>
           </select>
           <label style="font-size:12px;display:flex;align-items:center;gap:4px">
-            <input type="checkbox" id="notification-enabled" checked> 启用推送
+            <input type="checkbox" id="notification-enabled" checked> <span data-i18n="morning.push_enable">启用推送</span>
           </label>
         </div>
-        <input id="notification-webhook" class="sub-input" placeholder="Webhook URL（留空则不推送）" style="width:100%;margin-bottom:6px">
-        <button class="btn btn-p" onclick="saveSubConfig()" style="font-size:12px;padding:6px 14px">保存全部配置</button>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">采集完成后自动推送简报链接到对应渠道。</div>
+        <input id="notification-webhook" class="sub-input" placeholder="Webhook URL（留空则不推送）" style="width:100%;margin-bottom:6px" data-i18n-placeholder="morning.push_webhook_ph">
+        <button class="btn btn-p" onclick="saveSubConfig()" style="font-size:12px;padding:6px 14px" data-i18n="morning.save_config">保存全部配置</button>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px" data-i18n="morning.push_desc">采集完成后自动推送简报链接到对应渠道。</div>
       </div>
       <div id="sub-status" style="font-size:12px;margin-top:8px;display:none"></div>
     </div>
@@ -891,10 +892,10 @@
   <div class="confirm-box">
     <div class="confirm-title" id="confirm-title"></div>
     <div class="confirm-msg" id="confirm-msg"></div>
-    <input class="confirm-input" id="confirm-reason" placeholder="原因（可选）"/>
+    <input class="confirm-input" id="confirm-reason" placeholder="原因（可选）" data-i18n-placeholder="confirm.reason_ph"/>
     <div class="confirm-btns">
-      <button class="btn btn-g" onclick="closeConfirm()">取消</button>
-      <button class="btn btn-p" id="confirm-ok" onclick="doConfirm()">确认</button>
+      <button class="btn btn-g" onclick="closeConfirm()" data-i18n="confirm.cancel">取消</button>
+      <button class="btn btn-p" id="confirm-ok" onclick="doConfirm()" data-i18n="confirm.ok">确认</button>
     </div>
   </div>
 </div>
@@ -908,6 +909,1049 @@ let liveStatus=null, agentConfig=null, activeTab='edicts', countdown=5;
 let globalScanActions = [], globalScanDetailOpen = false;
 let globalScanCheckedAt = '', globalScanCount = 0;
 const GLOBAL_SCAN_STORAGE_KEY = 'openclaw_global_scan_state_v1';
+
+/* ══ I18N ══ */
+let _lang = localStorage.getItem('lang') || 'zh';
+const i18n = {
+zh: {
+  // -- Branding / Header --
+  'brand.title': '⚔️ 军机处 · 三省六部总控台',
+  'brand.subtitle': '皇上视角 · 实时旨意追踪',
+  'brand.page_title': '军机处 · 三省六部总控台',
+  'btn.toggle_theme': '切换主题',
+  'btn.toggle_lang': '切换语言',
+  'btn.feedback': '祈告上苍（反馈问题或建议）',
+  'btn.feedback_text': '🙏 祈告上苍',
+  'chip.syncing': '⟳ 同步中',
+  'chip.edicts': '— 旨意',
+  'btn.refresh': '⟳ 立即刷新',
+
+  // -- Tabs --
+  'tab.edicts': '📜 旨意看板',
+  'tab.monitor': '🔭 省部调度',
+  'tab.officials': '👥 官员总览',
+  'tab.models': '⚙️ 模型配置',
+  'tab.skills': '🛠️ 技能配置',
+  'tab.sessions': '💬 小任务',
+  'tab.memorials': '📜 奏折阁',
+  'tab.templates': '📜 旨库',
+  'tab.morning': '📰 天下要闻',
+
+  // -- Archive filter bar --
+  'filter.label': '📋 筛选：',
+  'filter.active': '🔥 进行中',
+  'filter.archived': '📦 已归档',
+  'filter.all': '全部',
+  'scan.button': '🧭 太子巡检',
+  'scan.no_scan': '未巡检',
+  'scan.last_scan': '最近巡检: {count} 个动作',
+  'scan.view_detail': '查看巡检详情',
+  'scan.collapse_detail': '收起巡检详情',
+  'scan.copy_report': '📋 复制巡检报告',
+  'archive.all_done': '📦 一键归档已完成',
+
+  // -- Pipeline --
+  'pipe.Inbox.dept': '皇上',
+  'pipe.Inbox.action': '下旨',
+  'pipe.Taizi.dept': '太子',
+  'pipe.Taizi.action': '分拣',
+  'pipe.Zhongshu.dept': '中书省',
+  'pipe.Zhongshu.action': '起草',
+  'pipe.Menxia.dept': '门下省',
+  'pipe.Menxia.action': '审议',
+  'pipe.Assigned.dept': '尚书省',
+  'pipe.Assigned.action': '派发',
+  'pipe.Doing.dept': '六部',
+  'pipe.Doing.action': '执行',
+  'pipe.Review.dept': '尚书省',
+  'pipe.Review.action': '汇总',
+  'pipe.Done.dept': '回奏',
+  'pipe.Done.action': '完成',
+
+  // -- States --
+  'state.Inbox': '收件',
+  'state.Pending': '待处理',
+  'state.Taizi': '太子分拣',
+  'state.Zhongshu': '中书起草',
+  'state.Menxia': '门下审议',
+  'state.Assigned': '已派发',
+  'state.Doing': '执行中',
+  'state.Review': '待审查',
+  'state.Done': '已完成',
+  'state.Blocked': '阻塞',
+  'state.Cancelled': '已取消',
+  'state.Next': '待执行',
+  'state.Menxia_round': '门下审议（第{n}轮）',
+  'state.Zhongshu_revision': '中书修订（第{n}轮）',
+
+  // -- Departments --
+  'dept.taizi': '太子',
+  'dept.zhongshu': '中书省',
+  'dept.menxia': '门下省',
+  'dept.shangshu': '尚书省',
+  'dept.libu': '礼部',
+  'dept.hubu': '户部',
+  'dept.bingbu': '兵部',
+  'dept.xingbu': '刑部',
+  'dept.gongbu': '工部',
+  'dept.libu_hr': '吏部',
+  'dept.qintianjian': '钦天监',
+  'dept.emperor': '皇上',
+  'dept.reply': '回奏',
+  'dept.six_ministries': '六部',
+
+  // -- Department roles & ranks --
+  'role.taizi': '太子',
+  'role.zhongshu': '中书令',
+  'role.menxia': '侍中',
+  'role.shangshu': '尚书令',
+  'role.libu': '礼部尚书',
+  'role.hubu': '户部尚书',
+  'role.bingbu': '兵部尚书',
+  'role.xingbu': '刑部尚书',
+  'role.gongbu': '工部尚书',
+  'role.libu_hr': '吏部尚书',
+  'role.qintianjian': '朝报官',
+  'rank.crown_prince': '储君',
+  'rank.first_1': '正一品',
+  'rank.first_2': '正二品',
+  'rank.first_3': '正三品',
+
+  // -- Monitor --
+  'monitor.desc': '各省部当前承接旨意与执行状态 · 每5秒自动刷新',
+  'monitor.status.blocked': '⚠️ 阻塞',
+  'monitor.status.executing': '⚙️ 执行中',
+  'monitor.status.active': '🟢 活跃',
+  'monitor.status.standing_by': '⚪ 候命',
+  'monitor.awaiting': '候命中',
+  'monitor.last_involved': '· 最近参与 ',
+  'monitor.no_edicts': '· 尚无旨意记录',
+  'monitor.not_configured': '待配置',
+  'monitor.no_title': '(无标题)',
+
+  // -- Agents --
+  'agent.status_title': '🔌 Agent 在线状态',
+  'agent.gateway_unknown': '未知',
+  'agent.refresh': '🔄 刷新',
+  'agent.wake_all': '⚡ 全部唤醒',
+  'agent.no_activity': '无活动记录',
+  'agent.wake': '⚡ 唤醒',
+  'agent.waking': '⏳ 唤醒中...',
+  'agent.wake_sent': '唤醒指令已发出',
+  'agent.wake_failed': '唤醒失败: ',
+  'agent.all_online': '所有 Agent 均已在线',
+  'agent.waking_n': '正在唤醒 {n} 个 Agent...',
+  'agent.wake_n_sent': '{n} 个唤醒指令已发出，30秒后刷新状态',
+  'agent.status_error': '⚠️ 无法获取 Agent 状态',
+  'agent.running': '运行中',
+  'agent.idle': '待命',
+  'agent.offline': '离线',
+  'agent.unconfigured': '未配置',
+  'agent.checked_at': '检测于 ',
+
+  // -- Officials --
+  'official.click_detail': '← 点击左侧官员查看详情',
+  'official.active_now': '🟢 当前活跃：',
+  'official.others_standby': '其余官员待命',
+  'official.kpi.active': '在职官员',
+  'official.kpi.edicts_done': '累计完成旨意',
+  'official.kpi.cost': '累计费用（含缓存）',
+  'official.kpi.top_merit': '功绩最高',
+  'official.rank_title': '功绩排行',
+  'official.merit_score': '分',
+  'official.standby': '⚪ 待命',
+  'official.token_input': '输入',
+  'official.token_output': '输出',
+  'official.token_cache_read': '缓存读',
+  'official.token_cache_write': '缓存写',
+  'official.hero_rank': '🏅 {rank} · 功绩分 {score}',
+  'official.stat.done': '完成旨意',
+  'official.stat.doing': '执行中',
+  'official.stat.flow': '流转参与',
+  'official.token_section': 'Token 消耗',
+  'official.cost_section': '累计费用',
+  'official.cost_cny': '人民币',
+  'official.cost_usd': '美元',
+  'official.total_tokens': '总计 {n} tokens（含缓存）',
+  'official.involved_edicts': '参与旨意（{n} 道）',
+  'official.no_edict_record': '暂无旨意记录',
+  'official.sessions_msg': '{n1} 个会话 · {n2} 条消息',
+  'official.load_error': '⚠️ 无法加载，请确认服务器已启动',
+
+  // -- Model config --
+  'model.title': '各省部 · 模型配置',
+  'model.subtitle': '— 更改后自动重启 Gateway（约5秒）',
+  'model.changelog': '变更记录',
+  'model.ensure_server': '请确保本地服务器已启动',
+  'model.current': '当前: ',
+  'model.apply': '应用',
+  'model.reset': '重置',
+  'model.submitting': '⟳ 提交中…',
+  'model.submitted': '✅ 已提交，Gateway 重启中（约5秒）',
+  'model.error': '❌ ',
+  'model.no_connection': '❌ 无法连接服务器',
+  'model.no_changes': '暂无变更',
+  'model.rollback': '⚠ 已回滚',
+  'model.grid_error': '⚠️ 请先启动本地服务器：<code>python3 dashboard/server.py</code>',
+
+  // -- Skills --
+  'skills.title': '各省部 · Skills 配置',
+  'skills.subtitle': '— 点击技能查看详情，底部可添加新技能',
+  'skills.load_error': '无法加载',
+  'skills.count_suffix': ' 技能',
+  'skills.empty': '暂无 Skills',
+  'skills.no_desc': '无描述',
+  'skills.add': '＋ 添加技能',
+  'skills.modal_title': '为 {agent} 添加技能',
+  'skills.add_new': '＋ 新增 Skill',
+  'skills.spec_title': '📋 Skill 规范说明',
+  'skills.spec.name': '• 技能名称使用小写英文 + 连字符...',
+  'skills.spec.template': '• 创建后会在... 生成模板文件',
+  'skills.spec.frontmatter': '• SKILL.md 使用 YAML frontmatter 头部...',
+  'skills.spec.activation': '• 技能会在 agent 收到相关任务时自动激活...',
+  'skills.form.name': '技能名称 *',
+  'skills.form.name_ph': '如 data-analysis, code-review, doc-writer',
+  'skills.form.name_pattern': '小写英文+连字符，至少2个字符',
+  'skills.form.desc': '技能描述 (一句话说明用途)',
+  'skills.form.desc_ph': '如：负责代码审查与质量检测，发现潜在Bug和安全风险',
+  'skills.form.trigger': '触发条件 (可选，何时激活此技能)',
+  'skills.form.trigger_ph': '如：当任务涉及代码质量、安全审查时激活',
+  'skills.form.cancel': '取消',
+  'skills.form.submit': '📦 创建技能',
+  'skills.add_ok': '✅ 技能 {name} 已添加到 {agent}',
+  'skills.add_fail': '添加失败',
+
+  // -- Sessions --
+  'session.desc': '飞书/Telegram 中的日常对话与小任务 · 非JJC圣旨类任务',
+  'session.filter_label': '筛选：',
+  'session.empty': '暂无小任务/会话数据',
+  'session.unknown': '未知',
+  'session.heartbeat': '💓 心跳检测',
+  'session.main_session': '主会话',
+  'session.sub_task': '子任务执行',
+  'session.scheduled': '定时任务',
+  'session.ch.feishu': '飞书对话',
+  'session.ch.feishu_short': '飞书',
+  'session.ch.wecom': '企业微信',
+  'session.ch.timing': 'Timing',
+  'session.ch.webchat': 'WebChat',
+  'session.ch.direct': '直连',
+  'session.ch.session': '会话',
+  'session.total_tokens': '总 Tokens',
+  'session.input': '输入',
+  'session.output': '输出',
+  'session.last_activity': '最近活动',
+  'session.msg_count': '条',
+  'session.no_activity': '暂无活动记录',
+  'session.kind.reply': '回复',
+  'session.kind.tool': '工具',
+  'session.kind.user': '用户',
+  'session.kind.event': '事件',
+
+  // -- Time --
+  'time.just_now': '刚刚',
+  'time.minutes_ago': '{n}分钟前',
+  'time.hours_ago': '{n}小时前',
+  'time.days_ago': '{n}天前',
+  'time.seconds': '{n}秒',
+  'time.minutes_seconds': '{m}分{s}秒',
+  'time.hours_minutes': '{h}小时{m}分',
+  'time.minutes_only': '{n}分钟',
+  'time.loading': '加载中…',
+
+  // -- Morning brief --
+  'morning.title': '📰 天下要闻 · 御览',
+  'morning.subtitle': '{date} | 采集于 {time} | 共 {n} 条要闻',
+  'morning.loading': '⟳ 加载要闻中…',
+  'morning.empty_action': '⚠️ 暂无数据，请点击「立即采集」',
+  'morning.empty_hint': '暂无数据，点击右上角「立即采集」获取今日简报',
+  'morning.count_suffix': '条',
+  'morning.no_news': '暂无新闻',
+  'morning.keyword_badge': '⭐ 关注',
+  'morning.collecting': '⟳ 采集中…',
+  'morning.collecting_poll': '⟳ 采集中… ({n}s)',
+  'morning.refresh_ok': '✅ 天下要闻已更新',
+  'morning.refresh_fail': '触发失败',
+  'morning.refresh_timeout': '采集超时，请重试',
+  'morning.manage_sub': '⚙ 订阅管理',
+  'morning.collect_now': '⟳ 立即采集',
+  'morning.cat_label': '📂 新闻分类 <span style="font-weight:400;font-size:11px;color:var(--muted)">— 勾选启用，取消禁用</span>',
+  'morning.kw_label': '🔑 自定义关注词 <span style="font-weight:400;font-size:11px;color:var(--muted)">— 额外关键词过滤</span>',
+  'morning.kw_ph': '输入关键词，如：芯片、SpaceX…',
+  'morning.kw_add': '添加',
+  'morning.rss_label': '📡 自定义 RSS 源',
+  'morning.no_custom_source': '暂无自定义源',
+  'morning.rss_name_ph': '源名称',
+  'morning.push_label': '🔔 消息推送',
+  'morning.push_enable': '启用推送',
+  'morning.push_webhook_ph': 'Webhook URL（留空则不推送）',
+  'morning.save_config': '保存全部配置',
+  'morning.push_desc': '采集完成后自动推送简报链接到对应渠道。',
+  // Morning categories
+  'morning.cat.politics': '政治',
+  'morning.cat.military': '军事',
+  'morning.cat.economy': '经济',
+  'morning.cat.ai': 'AI大模型',
+  'morning.cat_desc.politics': '全球政治动态',
+  'morning.cat_desc.military': '军事与冲突',
+  'morning.cat_desc.economy': '经济与市场',
+  'morning.cat_desc.ai': 'AI与大模型进展',
+
+  // -- Memorial --
+  'memorial.title': '📜 奏折阁 · 旨意存档',
+  'memorial.desc': '任务完成后自动生成奏折，记录从下旨到完成的完整过程',
+  'memorial.empty': '暂无奏折 — 任务完成后自动生成',
+  'memorial.filter_all': '全部',
+  'memorial.filter_done': '已完成',
+  'memorial.filter_cancelled': '已取消',
+  'memorial.phase.origin': '圣旨原文',
+  'memorial.phase.plan': '中书规划',
+  'memorial.phase.review': '门下审议',
+  'memorial.phase.execute': '六部执行',
+  'memorial.phase.report': '汇总回奏',
+  'memorial.output': '📦 产出物',
+  'memorial.view': '📖 查看奏章',
+  'memorial.copy': '📋 复制奏折',
+  'memorial.not_generated': '（产出物文件不存在或尚未生成）',
+  // Memorial export
+  'export.header': '# 📜 奏折 · {title}',
+  'export.task_id': '任务编号',
+  'export.status': '状态',
+  'export.dept': '负责部门',
+  'export.start': '开始时间',
+  'export.end': '完成时间',
+  'export.duration': '总耗时',
+  'export.last_update': '最后更新',
+  'export.review_rounds': '磋商轮次',
+  'export.flow_log': '流转记录',
+  'export.output': '产出物',
+
+  // -- Templates --
+  'tpl.title': '📜 旨库 · 圣旨模板',
+  'tpl.desc': '选择模板、填写参数、一键下旨 — 降低使用门槛，快速启动任务',
+  'tpl.free_title': '✍️ 自由下旨',
+  'tpl.free_desc': '无需模板，直接用自然语言描述你的需求，系统会自动派发给太子处理',
+  'tpl.free_ph': '例如：帮我分析一下最近三个月的销售数据趋势，生成图表和报告…',
+  'tpl.priority_normal': '普通优先级',
+  'tpl.priority_high': '高优先级',
+  'tpl.submit': '📜 下旨',
+  'tpl.cat.all': '全部',
+  'tpl.cat.daily': '日常办公',
+  'tpl.cat.data': '数据分析',
+  'tpl.cat.engineering': '工程开发',
+  'tpl.cat.content': '内容创作',
+  'tpl.form_title': '圣旨模板',
+  'tpl.preview_label': '📜 将发送给中书省的旨意：',
+  'tpl.preview_btn': '👁 预览旨意',
+  'tpl.validate_params': '请填写必填参数',
+  'tpl.gateway_warning': '⚠️ Gateway 未启动，任务将无法派发！请先运行 openclaw gateway start',
+  'tpl.gateway_confirm': 'Gateway 未启动，任务创建后将无法自动派发。是否仍然继续？',
+  'tpl.confirm_decree': '确认下旨？',
+  'tpl.decree_ok': '📜 {id} 旨意已下达',
+  'tpl.decree_fail': '下旨失败',
+  'tpl.server_fail': '⚠️ 服务器连接失败，已复制到剪贴板',
+  // Template items
+  'tpl.weekly.name': '周报生成',
+  'tpl.weekly.desc': '基于本周看板数据和各部产出，自动生成结构化周报',
+  'tpl.code_review.name': '代码审查',
+  'tpl.code_review.desc': '对指定代码仓库/文件进行质量审查，输出问题清单和改进建议',
+  'tpl.api_design.name': 'API 设计与实现',
+  'tpl.api_design.desc': '从需求描述到 RESTful API 设计、实现、测试一条龙',
+  'tpl.competitor.name': '竞品分析',
+  'tpl.competitor.desc': '爬取竞品网站数据，分析对比，生成结构化报告',
+  'tpl.data_report.name': '数据报告',
+  'tpl.data_report.desc': '对给定数据集进行清洗、分析、可视化，输出分析报告',
+  'tpl.blog.name': '博客文章',
+  'tpl.blog.desc': '给定主题和要求，生成高质量博客文章',
+  'tpl.deploy.name': '部署方案',
+  'tpl.deploy.desc': '生成完整的部署检查单、Docker配置、CI/CD流程',
+  'tpl.email.name': '邮件/通知文案',
+  'tpl.email.desc': '根据场景和目的，生成专业邮件或通知文案',
+  'tpl.standup.name': '每日站会摘要',
+  'tpl.standup.desc': '汇总各部今日进展和明日计划，生成站会摘要',
+
+  // -- Edict cards --
+  'edict.no_title': '(无标题)',
+  'edict.current': '当前:',
+  'edict.review_round': '第 {n} 轮磋商',
+  'edict.todo_done': '✅ 全部完成',
+  'edict.todo_progress': '🔄 进行中',
+  'edict.stop': '⏸ 叫停',
+  'edict.cancel': '🚫 取消',
+  'edict.resume': '▶ 恢复',
+  'edict.archive_title': '移入归档',
+  'edict.archive': '📦 归档',
+  'edict.unarchive_title': '取消归档',
+  'edict.unarchive': '📤 取消归档',
+  'edict.empty': '暂无旨意',
+  'edict.empty_hint': '通过飞书向太子发送任务，太子分拣后转中书省处理',
+
+  // -- Task detail modal --
+  'modal.current_stage': '当前阶段：',
+  'modal.stop': '⏸ 叫停任务',
+  'modal.cancel': '🚫 取消任务',
+  'modal.resume': '▶️ 恢复执行',
+  'modal.approve': '✅ 准奏',
+  'modal.reject': '🚫 封驳',
+  'modal.advance': '⏩ 推进到下一步',
+  'modal.scheduler_title': '🧭 太子调度',
+  'modal.scheduler_loading': '加载中...',
+  'modal.kpi.stalled': '停滞时长',
+  'modal.kpi.retries': '重试次数',
+  'modal.kpi.escalation': '升级级别',
+  'modal.kpi.dispatch': '派发状态',
+  'modal.retry': '🔁 重试派发',
+  'modal.escalate': '📣 升级协调',
+  'modal.rollback': '↩️ 回滚稳定点',
+  'modal.scan_now': '🔍 立即扫描',
+  'modal.todo_header': '子任务清单（{done}/{total}）',
+  'modal.todo_done': '已完成',
+  'modal.todo_progress': '进行中',
+  'modal.todo_pending': '待开始',
+  'modal.meta.status': '状态',
+  'modal.meta.dept': '执行部门',
+  'modal.meta.eta': '预计完成',
+  'modal.meta.blocker': '阻塞项',
+  'modal.meta.progress': '当前进展',
+  'modal.meta.acceptance': '验收标准',
+  'modal.flow_log': '流转日志（{n} 条）',
+  'modal.flow_empty': '暂无流转记录（任务启动后自动填充）',
+  'modal.output': '产出物',
+  'modal.live_activity': '实时动态',
+  'modal.review_mode': '执行回顾',
+  'modal.loading_agent': '加载中...',
+  'modal.fetching_activity': '正在获取 Agent 活动数据...',
+  'modal.no_progress': 'Agent 尚未上报进展（等待 Agent 调用 progress 命令）',
+
+  // -- Scheduler state --
+  'sched.no_data': '无调度数据',
+  'sched.disabled': '已禁用',
+  'sched.running': '运行中',
+  'sched.escalation.none': '无',
+  'sched.escalation.menxia': '门下省',
+  'sched.escalation.shangshu': '尚书省',
+  'sched.threshold': '阈值',
+  'sched.recent_progress': '最近进展',
+  'sched.recent_dispatch': '最近派发',
+  'sched.auto_rollback': '自动回滚',
+  'sched.off': '关闭',
+  'sched.on': '开启',
+  'sched.target': '目标',
+
+  // -- Live activity --
+  'live.search_scope': '搜索范围: ',
+  'live.no_agent': '无对应 Agent',
+  'live.last_active': '最后活跃: ',
+  'live.agent_count': '{n} 个 Agent',
+  'live.total_time': '总耗时',
+  'live.phase_time': '⏱ 阶段耗时',
+  'live.in_progress': ' ●进行中',
+  'live.progress_bar': '📊 执行进度',
+  'live.progress_detail': '✅{done} 🔄{progress} ⬜{pending} / 共{total}项',
+  'live.resource': '📈 资源消耗',
+  'live.no_conversation': '暂无此任务的对话记录',
+  'live.recent_update': '最近更新',
+  'live.just_done': '✨刚完成',
+  'live.new_item': '🆕新增',
+  'live.thinking': '💭',
+
+  // -- Confirm dialog --
+  'confirm.stop_title': '⏸ 叫停任务',
+  'confirm.cancel_title': '🚫 取消任务',
+  'confirm.stop_msg': '确定要叫停 {id} 吗？任务将暂停执行，可随时恢复。',
+  'confirm.cancel_msg': '确定要取消 {id} 吗？此操作不可撤销。',
+  'confirm.stop_btn': '确认叫停',
+  'confirm.cancel_btn': '确认取消',
+  'confirm.reason_ph': '原因（可选）',
+  'confirm.cancel': '取消',
+  'confirm.ok': '确认',
+
+  // -- Review --
+  'review.approve': '准奏',
+  'review.reject': '封驳',
+  'review.advance_prefix': '⏩ 手动推进',
+  'review.reason_prompt': '请输入重试/升级/回滚原因（可留空）',
+
+  // -- Advance labels --
+  'advance.Zhongshu': '中书省起草',
+  'advance.Menxia': '门下省审议',
+  'advance.Assigned': '尚书省派发',
+  'advance.Doing': '开始执行',
+  'advance.Review': '进入审查',
+  'advance.Done': '完成',
+
+  // -- Archive --
+  'archive.confirm_all': '将所有已完成/已取消的旨意移入归档？',
+  'archive.all_done': '📦 {count} 道旨意已归档',
+
+  // -- Scan details --
+  'scan.action_retry': '重试',
+  'scan.action_escalate': '升级',
+  'scan.action_rollback': '回滚',
+  'scan.action_label': '动作',
+  'scan.target': '目标: ',
+  'scan.stalled': '停滞 {n}s',
+  'scan.no_info': '无附加信息',
+  'scan.more_actions': '另有 {n} 条动作未展示',
+  'scan.report_title': '【太子巡检报告】',
+  'scan.report_time': '时间:',
+  'scan.report_count': '动作数:',
+  'scan.report_no_actions': '本次巡检无动作。',
+  'scan.copy_ok': '📋 巡检报告已复制',
+  'scan.copy_fail': '复制失败，请手动复制',
+
+  // -- Ceremony --
+  'ceremony.line1': '早朝开始',
+  'ceremony.line2': '各部听旨',
+  'ceremony.line3': '待办 {todo} 件 · 已完成 {done} 件 · ⚠ 超期 {overdue} 件',
+  'ceremony.skip': '点击任意处跳过',
+
+  // -- Free edict --
+  'free.validate': '请输入至少6个字的旨意内容',
+
+  // -- Feedback --
+  'feedback.prompt': '请选择反馈类型：\n1 = 禀报异常 (Bug)\n2 = 奏请功能 (Feature)\n\n输入 1 或 2：',
+
+  // -- Notification channels --
+  'notify.feishu': '💬 飞书 Feishu',
+  'notify.wecom': '📱 企业微信',
+  'notify.telegram': '✈️ Telegram',
+  'notify.discord': '🎮 Discord',
+  'notify.slack': '💬 Slack',
+  'notify.webhook': '🔗 通用 Webhook',
+},
+en: {
+  // -- Branding / Header --
+  'brand.title': '⚔️ Grand Council · Three Depts Command',
+  'brand.subtitle': "Emperor's View · Live Edict Tracking",
+  'brand.page_title': 'Grand Council · Three Depts & Six Ministries Command',
+  'btn.toggle_theme': 'Toggle Theme',
+  'btn.toggle_lang': 'Switch Language',
+  'btn.feedback': 'Petition the Heavens (Report bugs or suggestions)',
+  'btn.feedback_text': '🙏 Petition',
+  'chip.syncing': '⟳ Syncing',
+  'chip.edicts': '— Edicts',
+  'btn.refresh': '⟳ Refresh Now',
+
+  // -- Tabs --
+  'tab.edicts': '📜 Edict Board',
+  'tab.monitor': '🔭 Dept Dispatch',
+  'tab.officials': '👥 Officials',
+  'tab.models': '⚙️ Model Config',
+  'tab.skills': '🛠️ Skills',
+  'tab.sessions': '💬 Sessions',
+  'tab.memorials': '📜 Memorial Archives',
+  'tab.templates': '📜 Edict Library',
+  'tab.morning': '📰 Imperial Briefing',
+
+  // -- Archive filter bar --
+  'filter.label': '📋 Filter:',
+  'filter.active': '🔥 Active',
+  'filter.archived': '📦 Archived',
+  'filter.all': 'All',
+  'scan.button': '🧭 Inspection',
+  'scan.no_scan': 'Not inspected',
+  'scan.last_scan': 'Last inspection: {count} actions',
+  'scan.view_detail': 'View Details',
+  'scan.collapse_detail': 'Hide Details',
+  'scan.copy_report': '📋 Copy Report',
+  'archive.all_done': '📦 Archive All Done',
+
+  // -- Pipeline --
+  'pipe.Inbox.dept': 'Emperor',
+  'pipe.Inbox.action': 'Decree',
+  'pipe.Taizi.dept': 'Crown Prince',
+  'pipe.Taizi.action': 'Triage',
+  'pipe.Zhongshu.dept': 'Secretariat',
+  'pipe.Zhongshu.action': 'Draft',
+  'pipe.Menxia.dept': 'Chancellery',
+  'pipe.Menxia.action': 'Deliberate',
+  'pipe.Assigned.dept': 'Dept of State',
+  'pipe.Assigned.action': 'Dispatch',
+  'pipe.Doing.dept': 'Six Ministries',
+  'pipe.Doing.action': 'Execute',
+  'pipe.Review.dept': 'Dept of State',
+  'pipe.Review.action': 'Compile',
+  'pipe.Done.dept': 'Report Back',
+  'pipe.Done.action': 'Complete',
+
+  // -- States --
+  'state.Inbox': 'Inbox',
+  'state.Pending': 'Pending',
+  'state.Taizi': 'Crown Prince Triage',
+  'state.Zhongshu': 'Secretariat Draft',
+  'state.Menxia': 'Chancellery Review',
+  'state.Assigned': 'Dispatched',
+  'state.Doing': 'Executing',
+  'state.Review': 'Under Review',
+  'state.Done': 'Completed',
+  'state.Blocked': 'Blocked',
+  'state.Cancelled': 'Cancelled',
+  'state.Next': 'Queued',
+  'state.Menxia_round': 'Chancellery Review (Round {n})',
+  'state.Zhongshu_revision': 'Secretariat Revision (Round {n})',
+
+  // -- Departments --
+  'dept.taizi': 'Crown Prince',
+  'dept.zhongshu': 'Secretariat',
+  'dept.menxia': 'Chancellery',
+  'dept.shangshu': 'Dept of State',
+  'dept.libu': 'Ministry of Rites',
+  'dept.hubu': 'Ministry of Revenue',
+  'dept.bingbu': 'Ministry of War',
+  'dept.xingbu': 'Ministry of Justice',
+  'dept.gongbu': 'Ministry of Works',
+  'dept.libu_hr': 'Ministry of Personnel',
+  'dept.qintianjian': 'Astronomical Bureau',
+  'dept.emperor': 'Emperor',
+  'dept.reply': 'Report Back',
+  'dept.six_ministries': 'Six Ministries',
+
+  // -- Department roles & ranks --
+  'role.taizi': 'Crown Prince',
+  'role.zhongshu': 'Grand Secretary',
+  'role.menxia': 'Chancellor',
+  'role.shangshu': 'Minister of State',
+  'role.libu': 'Minister of Rites',
+  'role.hubu': 'Minister of Revenue',
+  'role.bingbu': 'Minister of War',
+  'role.xingbu': 'Minister of Justice',
+  'role.gongbu': 'Minister of Works',
+  'role.libu_hr': 'Minister of Personnel',
+  'role.qintianjian': 'Court Astronomer',
+  'rank.crown_prince': 'Heir Apparent',
+  'rank.first_1': 'Rank 1a',
+  'rank.first_2': 'Rank 2a',
+  'rank.first_3': 'Rank 3a',
+
+  // -- Monitor --
+  'monitor.desc': 'Current edict assignments and execution status by dept · Auto-refreshes every 5s',
+  'monitor.status.blocked': '⚠️ Blocked',
+  'monitor.status.executing': '⚙️ Executing',
+  'monitor.status.active': '🟢 Active',
+  'monitor.status.standing_by': '⚪ Standby',
+  'monitor.awaiting': 'Awaiting',
+  'monitor.last_involved': '· Last involved ',
+  'monitor.no_edicts': '· No edict records',
+  'monitor.not_configured': 'Not configured',
+  'monitor.no_title': '(No title)',
+
+  // -- Agents --
+  'agent.status_title': '🔌 Agent Status',
+  'agent.gateway_unknown': 'Unknown',
+  'agent.refresh': '🔄 Refresh',
+  'agent.wake_all': '⚡ Wake All',
+  'agent.no_activity': 'No activity',
+  'agent.wake': '⚡ Wake',
+  'agent.waking': '⏳ Waking...',
+  'agent.wake_sent': 'Wake command sent',
+  'agent.wake_failed': 'Wake failed: ',
+  'agent.all_online': 'All Agents are online',
+  'agent.waking_n': 'Waking {n} Agents...',
+  'agent.wake_n_sent': '{n} wake commands sent, refreshing status in 30s',
+  'agent.status_error': '⚠️ Failed to get Agent status',
+  'agent.running': 'Running',
+  'agent.idle': 'Idle',
+  'agent.offline': 'Offline',
+  'agent.unconfigured': 'Unconfigured',
+  'agent.checked_at': 'Checked at ',
+
+  // -- Officials --
+  'official.click_detail': '← Click an official to view details',
+  'official.active_now': '🟢 Active: ',
+  'official.others_standby': 'Others on standby',
+  'official.kpi.active': 'Active Officials',
+  'official.kpi.edicts_done': 'Edicts Completed',
+  'official.kpi.cost': 'Total Cost (incl. cache)',
+  'official.kpi.top_merit': 'Top Merit',
+  'official.rank_title': 'Merit Ranking',
+  'official.merit_score': 'pts',
+  'official.standby': '⚪ Standby',
+  'official.token_input': 'Input',
+  'official.token_output': 'Output',
+  'official.token_cache_read': 'Cache Read',
+  'official.token_cache_write': 'Cache Write',
+  'official.hero_rank': '🏅 {rank} · Merit {score}',
+  'official.stat.done': 'Edicts Done',
+  'official.stat.doing': 'In Progress',
+  'official.stat.flow': 'Flow Participation',
+  'official.token_section': 'Token Usage',
+  'official.cost_section': 'Total Cost',
+  'official.cost_cny': 'CNY',
+  'official.cost_usd': 'USD',
+  'official.total_tokens': '{n} tokens total (incl. cache)',
+  'official.involved_edicts': 'Involved Edicts ({n})',
+  'official.no_edict_record': 'No edict records',
+  'official.sessions_msg': '{n1} sessions · {n2} messages',
+  'official.load_error': '⚠️ Failed to load, please confirm the server is running',
+
+  // -- Model config --
+  'model.title': 'Dept Model Configuration',
+  'model.subtitle': '— Changes auto-restart Gateway (~5s)',
+  'model.changelog': 'Change Log',
+  'model.ensure_server': 'Please ensure the local server is running',
+  'model.current': 'Current: ',
+  'model.apply': 'Apply',
+  'model.reset': 'Reset',
+  'model.submitting': '⟳ Submitting…',
+  'model.submitted': '✅ Submitted, Gateway restarting (~5s)',
+  'model.error': '❌ ',
+  'model.no_connection': '❌ Cannot connect to server',
+  'model.no_changes': 'No changes',
+  'model.rollback': '⚠ Rolled back',
+  'model.grid_error': '⚠️ Please start the local server first: <code>python3 dashboard/server.py</code>',
+
+  // -- Skills --
+  'skills.title': 'Dept Skills Configuration',
+  'skills.subtitle': '— Click a skill for details, add new skills at the bottom',
+  'skills.load_error': 'Failed to load',
+  'skills.count_suffix': ' skills',
+  'skills.empty': 'No Skills',
+  'skills.no_desc': 'No description',
+  'skills.add': '＋ Add Skill',
+  'skills.modal_title': 'Add Skill for {agent}',
+  'skills.add_new': '＋ New Skill',
+  'skills.spec_title': '📋 Skill Specification',
+  'skills.spec.name': '• Skill names use lowercase English + hyphens...',
+  'skills.spec.template': '• After creation, a template file is generated...',
+  'skills.spec.frontmatter': '• SKILL.md uses YAML frontmatter header...',
+  'skills.spec.activation': '• Skills auto-activate when an agent receives related tasks...',
+  'skills.form.name': 'Skill Name *',
+  'skills.form.name_ph': 'e.g. data-analysis, code-review, doc-writer',
+  'skills.form.name_pattern': 'Lowercase + hyphens, at least 2 characters',
+  'skills.form.desc': 'Description (one-line summary)',
+  'skills.form.desc_ph': 'e.g.: Code review and quality inspection, detecting bugs and security risks',
+  'skills.form.trigger': 'Trigger Condition (optional, when to activate)',
+  'skills.form.trigger_ph': 'e.g.: Activate when task involves code quality or security review',
+  'skills.form.cancel': 'Cancel',
+  'skills.form.submit': '📦 Create Skill',
+  'skills.add_ok': '✅ Skill {name} added to {agent}',
+  'skills.add_fail': 'Failed to add',
+
+  // -- Sessions --
+  'session.desc': 'Daily conversations and minor tasks in Feishu/Telegram · Non-edict tasks',
+  'session.filter_label': 'Filter:',
+  'session.empty': 'No sessions or minor tasks',
+  'session.unknown': 'Unknown',
+  'session.heartbeat': '💓 Heartbeat',
+  'session.main_session': 'Main Session',
+  'session.sub_task': 'Sub-task',
+  'session.scheduled': 'Scheduled',
+  'session.ch.feishu': 'Feishu Chat',
+  'session.ch.feishu_short': 'Feishu',
+  'session.ch.wecom': 'WeCom',
+  'session.ch.timing': 'Timing',
+  'session.ch.webchat': 'WebChat',
+  'session.ch.direct': 'Direct',
+  'session.ch.session': 'Session',
+  'session.total_tokens': 'Total Tokens',
+  'session.input': 'Input',
+  'session.output': 'Output',
+  'session.last_activity': 'Last Activity',
+  'session.msg_count': 'msgs',
+  'session.no_activity': 'No activity records',
+  'session.kind.reply': 'Reply',
+  'session.kind.tool': 'Tool',
+  'session.kind.user': 'User',
+  'session.kind.event': 'Event',
+
+  // -- Time --
+  'time.just_now': 'just now',
+  'time.minutes_ago': '{n} min ago',
+  'time.hours_ago': '{n} hr ago',
+  'time.days_ago': '{n} days ago',
+  'time.seconds': '{n}s',
+  'time.minutes_seconds': '{m}m {s}s',
+  'time.hours_minutes': '{h}h {m}m',
+  'time.minutes_only': '{n}min',
+  'time.loading': 'Loading…',
+
+  // -- Morning brief --
+  'morning.title': '📰 Imperial Briefing',
+  'morning.subtitle': '{date} | Collected at {time} | {n} items',
+  'morning.loading': '⟳ Loading briefing…',
+  'morning.empty_action': '⚠️ No data, click "Collect Now"',
+  'morning.empty_hint': 'No data yet, click "Collect Now" in the top right for today\'s briefing',
+  'morning.count_suffix': 'items',
+  'morning.no_news': 'No news',
+  'morning.keyword_badge': '⭐ Followed',
+  'morning.collecting': '⟳ Collecting…',
+  'morning.collecting_poll': '⟳ Collecting… ({n}s)',
+  'morning.refresh_ok': '✅ Imperial Briefing updated',
+  'morning.refresh_fail': 'Collection failed',
+  'morning.refresh_timeout': 'Collection timed out, please retry',
+  'morning.manage_sub': '⚙ Subscriptions',
+  'morning.collect_now': '⟳ Collect Now',
+  'morning.cat_label': '📂 News Categories <span style="font-weight:400;font-size:11px;color:var(--muted)">— Check to enable, uncheck to disable</span>',
+  'morning.kw_label': '🔑 Custom Keywords <span style="font-weight:400;font-size:11px;color:var(--muted)">— Additional keyword filtering</span>',
+  'morning.kw_ph': 'Enter keywords, e.g.: chips, SpaceX…',
+  'morning.kw_add': 'Add',
+  'morning.rss_label': '📡 Custom RSS Feeds',
+  'morning.no_custom_source': 'No custom sources',
+  'morning.rss_name_ph': 'Feed name',
+  'morning.push_label': '🔔 Notifications',
+  'morning.push_enable': 'Enable push',
+  'morning.push_webhook_ph': 'Webhook URL (leave empty to disable)',
+  'morning.save_config': 'Save All',
+  'morning.push_desc': 'Auto-push briefing link to the selected channel after collection.',
+  // Morning categories
+  'morning.cat.politics': 'Politics',
+  'morning.cat.military': 'Military',
+  'morning.cat.economy': 'Economy',
+  'morning.cat.ai': 'AI & LLM',
+  'morning.cat_desc.politics': 'Global political developments',
+  'morning.cat_desc.military': 'Military & conflicts',
+  'morning.cat_desc.economy': 'Economy & markets',
+  'morning.cat_desc.ai': 'AI & LLM advances',
+
+  // -- Memorial --
+  'memorial.title': '📜 Memorial Archives · Edict Records',
+  'memorial.desc': 'Memorials are auto-generated upon task completion, recording the full process from decree to delivery',
+  'memorial.empty': 'No memorials yet — auto-generated upon task completion',
+  'memorial.filter_all': 'All',
+  'memorial.filter_done': 'Completed',
+  'memorial.filter_cancelled': 'Cancelled',
+  'memorial.phase.origin': 'Imperial Edict',
+  'memorial.phase.plan': 'Secretariat Draft',
+  'memorial.phase.review': 'Chancellery Review',
+  'memorial.phase.execute': 'Ministry Execution',
+  'memorial.phase.report': 'Final Report',
+  'memorial.output': '📦 Output',
+  'memorial.view': '📖 View Memorial',
+  'memorial.copy': '📋 Copy Memorial',
+  'memorial.not_generated': '(Output file does not exist or has not been generated yet)',
+  // Memorial export
+  'export.header': '# 📜 Memorial · {title}',
+  'export.task_id': 'Task ID',
+  'export.status': 'Status',
+  'export.dept': 'Department',
+  'export.start': 'Start Time',
+  'export.end': 'End Time',
+  'export.duration': 'Duration',
+  'export.last_update': 'Last Updated',
+  'export.review_rounds': 'Consultation Rounds',
+  'export.flow_log': 'Flow Log',
+  'export.output': 'Output',
+
+  // -- Templates --
+  'tpl.title': '📜 Edict Library · Templates',
+  'tpl.desc': 'Select a template, fill in parameters, issue an edict — lower the barrier, launch tasks quickly',
+  'tpl.free_title': '✍️ Free Edict',
+  'tpl.free_desc': 'No template needed — describe your request in natural language, the system will auto-dispatch to the Crown Prince',
+  'tpl.free_ph': 'e.g.: Analyze the sales data trend for the last three months, generate charts and a report…',
+  'tpl.priority_normal': 'Normal Priority',
+  'tpl.priority_high': 'High Priority',
+  'tpl.submit': '📜 Issue Edict',
+  'tpl.cat.all': 'All',
+  'tpl.cat.daily': 'Daily Ops',
+  'tpl.cat.data': 'Data Analysis',
+  'tpl.cat.engineering': 'Engineering',
+  'tpl.cat.content': 'Content',
+  'tpl.form_title': 'Edict Template',
+  'tpl.preview_label': '📜 Edict to be sent to the Secretariat:',
+  'tpl.preview_btn': '👁 Preview Edict',
+  'tpl.validate_params': 'Please fill in required parameters',
+  'tpl.gateway_warning': '⚠️ Gateway is not running! Tasks cannot be dispatched. Please run: openclaw gateway start',
+  'tpl.gateway_confirm': 'Gateway is not running. Tasks will not be auto-dispatched. Continue anyway?',
+  'tpl.confirm_decree': 'Confirm issuing edict?',
+  'tpl.decree_ok': '📜 Edict {id} has been issued',
+  'tpl.decree_fail': 'Failed to issue edict',
+  'tpl.server_fail': '⚠️ Server connection failed, copied to clipboard',
+  // Template items
+  'tpl.weekly.name': 'Weekly Report',
+  'tpl.weekly.desc': 'Auto-generate a structured weekly report from dashboard data and department outputs',
+  'tpl.code_review.name': 'Code Review',
+  'tpl.code_review.desc': 'Quality review of specified repos/files, output issue list and improvement suggestions',
+  'tpl.api_design.name': 'API Design & Implementation',
+  'tpl.api_design.desc': 'End-to-end: from requirements to RESTful API design, implementation, and testing',
+  'tpl.competitor.name': 'Competitor Analysis',
+  'tpl.competitor.desc': 'Scrape competitor data, analyze and compare, generate structured report',
+  'tpl.data_report.name': 'Data Report',
+  'tpl.data_report.desc': 'Clean, analyze, and visualize datasets, output analysis report',
+  'tpl.blog.name': 'Blog Post',
+  'tpl.blog.desc': 'Generate a high-quality blog post from a given topic and requirements',
+  'tpl.deploy.name': 'Deployment Plan',
+  'tpl.deploy.desc': 'Generate complete deployment checklist, Docker config, and CI/CD pipeline',
+  'tpl.email.name': 'Email / Notification Copy',
+  'tpl.email.desc': 'Generate professional email or notification copy for a given scenario',
+  'tpl.standup.name': 'Daily Standup Summary',
+  'tpl.standup.desc': 'Aggregate today\'s progress and tomorrow\'s plans across departments',
+
+  // -- Edict cards --
+  'edict.no_title': '(No title)',
+  'edict.current': 'Current:',
+  'edict.review_round': 'Round {n} Consultation',
+  'edict.todo_done': '✅ All Done',
+  'edict.todo_progress': '🔄 In Progress',
+  'edict.stop': '⏸ Pause',
+  'edict.cancel': '🚫 Cancel',
+  'edict.resume': '▶ Resume',
+  'edict.archive_title': 'Move to Archive',
+  'edict.archive': '📦 Archive',
+  'edict.unarchive_title': 'Unarchive',
+  'edict.unarchive': '📤 Unarchive',
+  'edict.empty': 'No edicts',
+  'edict.empty_hint': 'Send tasks to the Crown Prince via Feishu — after triage, they go to the Secretariat',
+
+  // -- Task detail modal --
+  'modal.current_stage': 'Current Stage: ',
+  'modal.stop': '⏸ Pause Task',
+  'modal.cancel': '🚫 Cancel Task',
+  'modal.resume': '▶️ Resume',
+  'modal.approve': '✅ Approve',
+  'modal.reject': '🚫 Remonstrate',
+  'modal.advance': '⏩ Advance to Next',
+  'modal.scheduler_title': '🧭 Crown Prince Scheduler',
+  'modal.scheduler_loading': 'Loading...',
+  'modal.kpi.stalled': 'Stalled Duration',
+  'modal.kpi.retries': 'Retry Count',
+  'modal.kpi.escalation': 'Escalation Level',
+  'modal.kpi.dispatch': 'Dispatch Status',
+  'modal.retry': '🔁 Retry Dispatch',
+  'modal.escalate': '📣 Escalate',
+  'modal.rollback': '↩️ Rollback',
+  'modal.scan_now': '🔍 Scan Now',
+  'modal.todo_header': 'Subtasks ({done}/{total})',
+  'modal.todo_done': 'Done',
+  'modal.todo_progress': 'In Progress',
+  'modal.todo_pending': 'Pending',
+  'modal.meta.status': 'Status',
+  'modal.meta.dept': 'Department',
+  'modal.meta.eta': 'Estimated Completion',
+  'modal.meta.blocker': 'Blockers',
+  'modal.meta.progress': 'Current Progress',
+  'modal.meta.acceptance': 'Acceptance Criteria',
+  'modal.flow_log': 'Flow Log ({n} entries)',
+  'modal.flow_empty': 'No flow records yet (auto-populated after task start)',
+  'modal.output': 'Output',
+  'modal.live_activity': 'Live Activity',
+  'modal.review_mode': 'Execution Review',
+  'modal.loading_agent': 'Loading...',
+  'modal.fetching_activity': 'Fetching Agent activity data...',
+  'modal.no_progress': 'Agent has not reported progress yet (waiting for Agent to call progress command)',
+
+  // -- Scheduler state --
+  'sched.no_data': 'No scheduler data',
+  'sched.disabled': 'Disabled',
+  'sched.running': 'Running',
+  'sched.escalation.none': 'None',
+  'sched.escalation.menxia': 'Chancellery',
+  'sched.escalation.shangshu': 'Dept of State',
+  'sched.threshold': 'Threshold',
+  'sched.recent_progress': 'Recent Progress',
+  'sched.recent_dispatch': 'Recent Dispatch',
+  'sched.auto_rollback': 'Auto Rollback',
+  'sched.off': 'Off',
+  'sched.on': 'On',
+  'sched.target': 'Target',
+
+  // -- Live activity --
+  'live.search_scope': 'Search scope: ',
+  'live.no_agent': 'No matching Agent',
+  'live.last_active': 'Last active: ',
+  'live.agent_count': '{n} Agents',
+  'live.total_time': 'Total Time',
+  'live.phase_time': '⏱ Phase Time',
+  'live.in_progress': ' ●In Progress',
+  'live.progress_bar': '📊 Execution Progress',
+  'live.progress_detail': '✅{done} 🔄{progress} ⬜{pending} / {total} total',
+  'live.resource': '📈 Resource Usage',
+  'live.no_conversation': 'No conversation records for this task',
+  'live.recent_update': 'Recent Update',
+  'live.just_done': '✨Just Done',
+  'live.new_item': '🆕New',
+  'live.thinking': '💭',
+
+  // -- Confirm dialog --
+  'confirm.stop_title': '⏸ Pause Task',
+  'confirm.cancel_title': '🚫 Cancel Task',
+  'confirm.stop_msg': 'Are you sure you want to pause {id}? The task will stop executing and can be resumed anytime.',
+  'confirm.cancel_msg': 'Are you sure you want to cancel {id}? This action cannot be undone.',
+  'confirm.stop_btn': 'Confirm Pause',
+  'confirm.cancel_btn': 'Confirm Cancel',
+  'confirm.reason_ph': 'Reason (optional)',
+  'confirm.cancel': 'Cancel',
+  'confirm.ok': 'Confirm',
+
+  // -- Review --
+  'review.approve': 'Approve',
+  'review.reject': 'Remonstrate',
+  'review.advance_prefix': '⏩ Manual Advance',
+  'review.reason_prompt': 'Enter reason for retry/escalation/rollback (optional)',
+
+  // -- Advance labels --
+  'advance.Zhongshu': 'Secretariat Draft',
+  'advance.Menxia': 'Chancellery Review',
+  'advance.Assigned': 'Dept of State Dispatch',
+  'advance.Doing': 'Start Execution',
+  'advance.Review': 'Enter Review',
+  'advance.Done': 'Complete',
+
+  // -- Archive --
+  'archive.confirm_all': 'Archive all completed/cancelled edicts?',
+  'archive.all_done': '📦 {count} edicts archived',
+
+  // -- Scan details --
+  'scan.action_retry': 'Retry',
+  'scan.action_escalate': 'Escalate',
+  'scan.action_rollback': 'Rollback',
+  'scan.action_label': 'Action',
+  'scan.target': 'Target: ',
+  'scan.stalled': 'Stalled {n}s',
+  'scan.no_info': 'No additional info',
+  'scan.more_actions': '{n} more actions not shown',
+  'scan.report_title': '【Inspection Report】',
+  'scan.report_time': 'Time:',
+  'scan.report_count': 'Actions:',
+  'scan.report_no_actions': 'No actions in this inspection.',
+  'scan.copy_ok': '📋 Inspection report copied',
+  'scan.copy_fail': 'Copy failed, please copy manually',
+
+  // -- Ceremony --
+  'ceremony.line1': 'Court is in Session',
+  'ceremony.line2': 'Hear the Edict, Ministers',
+  'ceremony.line3': '{todo} Pending · {done} Done · ⚠ {overdue} Overdue',
+  'ceremony.skip': 'Click anywhere to skip',
+
+  // -- Free edict --
+  'free.validate': 'Please enter at least 6 characters for the edict',
+
+  // -- Feedback --
+  'feedback.prompt': 'Select feedback type:\n1 = Report Bug\n2 = Request Feature\n\nEnter 1 or 2:',
+
+  // -- Notification channels --
+  'notify.feishu': '💬 Feishu',
+  'notify.wecom': '📱 WeCom',
+  'notify.telegram': '✈️ Telegram',
+  'notify.discord': '🎮 Discord',
+  'notify.slack': '💬 Slack',
+  'notify.webhook': '🔗 Webhook',
+}
+};
+function t(key, params) {
+  const dict = i18n[_lang] || i18n.zh;
+  let str = dict[key] ?? i18n.zh[key] ?? key;
+  if (params) for (const [k, v] of Object.entries(params))
+    str = str.replace(new RegExp('\\{' + k + '\\}', 'g'), v);
+  return str;
+}
+
+/* ══ DEPT KEY MAP (Chinese API key → i18n key suffix) ══ */
+const DEPT_KEY_MAP = {'太子':'taizi','中书省':'zhongshu','门下省':'menxia','尚书省':'shangshu','礼部':'libu','户部':'hubu','兵部':'bingbu','刑部':'xingbu','工部':'gongbu','吏部':'libu_hr','皇上':'emperor','回奏':'reply','六部':'six_ministries','钦天监':'qintianjian'};
+function deptName(d){ return t('dept.'+(DEPT_KEY_MAP[d]||'')) || d; }
+
+/* ══ I18N APPLY (data-i18n attributes) ══ */
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const prefix = el.dataset.i18nPrefix || '';
+    el.textContent = prefix + t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el =>
+    el.title = t(el.dataset.i18nTitle));
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el =>
+    el.placeholder = t(el.dataset.i18nPlaceholder));
+  document.title = t('brand.page_title');
+}
 
 function persistGlobalScanState(meta = {}){
   try{
@@ -939,12 +1983,12 @@ function restoreGlobalScanState(){
   if(st){
     const at = globalScanCheckedAt.replace('T',' ').substring(11,19);
     const count = globalScanCount;
-    st.textContent = count || at ? `最近巡检: ${count} 个动作${at ? ' · ' + at : ''}` : '未巡检';
+    st.textContent = count || at ? t('scan.last_scan', {count}) + (at ? ' · ' + at : '') : t('scan.no_scan');
   }
   if(detailBtn){
     detailBtn.style.display = globalScanActions.length ? 'inline-block' : 'none';
     detailBtn.classList.toggle('active', globalScanDetailOpen);
-    detailBtn.textContent = globalScanDetailOpen ? '收起巡检详情' : '查看巡检详情';
+    detailBtn.textContent = globalScanDetailOpen ? t('scan.collapse_detail') : t('scan.view_detail');
   }
   if(copyBtn){
     copyBtn.style.display = globalScanActions.length ? 'inline-block' : 'none';
@@ -954,14 +1998,14 @@ function restoreGlobalScanState(){
 
 /* ══ PIPELINE DEFINITION ══ */
 const PIPE = [
-  {key:'Inbox',    dept:'皇上',   icon:'👑', action:'下旨'},
-  {key:'Taizi',    dept:'太子',   icon:'🤴', action:'分拣'},
-  {key:'Zhongshu', dept:'中书省', icon:'📜', action:'起草'},
-  {key:'Menxia',   dept:'门下省', icon:'🔍', action:'审议'},
-  {key:'Assigned', dept:'尚书省', icon:'📮', action:'派发'},
-  {key:'Doing',    dept:'六部',   icon:'⚙️', action:'执行'},
-  {key:'Review',   dept:'尚书省', icon:'🔎', action:'汇总'},
-  {key:'Done',     dept:'回奏',   icon:'✅', action:'完成'},
+  {key:'Inbox',    dept:'皇上',   deptKey:'pipe.Inbox.dept',   icon:'👑', action:'下旨', actionKey:'pipe.Inbox.action'},
+  {key:'Taizi',    dept:'太子',   deptKey:'pipe.Taizi.dept',   icon:'🤴', action:'分拣', actionKey:'pipe.Taizi.action'},
+  {key:'Zhongshu', dept:'中书省', deptKey:'pipe.Zhongshu.dept', icon:'📜', action:'起草', actionKey:'pipe.Zhongshu.action'},
+  {key:'Menxia',   dept:'门下省', deptKey:'pipe.Menxia.dept',  icon:'🔍', action:'审议', actionKey:'pipe.Menxia.action'},
+  {key:'Assigned', dept:'尚书省', deptKey:'pipe.Assigned.dept',icon:'📮', action:'派发', actionKey:'pipe.Assigned.action'},
+  {key:'Doing',    dept:'六部',   deptKey:'pipe.Doing.dept',   icon:'⚙️', action:'执行', actionKey:'pipe.Doing.action'},
+  {key:'Review',   dept:'尚书省', deptKey:'pipe.Review.dept',  icon:'🔎', action:'汇总', actionKey:'pipe.Review.action'},
+  {key:'Done',     dept:'回奏',   deptKey:'pipe.Done.dept',   icon:'✅', action:'完成', actionKey:'pipe.Done.action'},
 ];
 const PIPE_STATE_IDX = {Inbox:0,Pending:0,Taizi:1,Zhongshu:2,Menxia:3,Assigned:4,Doing:5,Review:6,Done:7,Blocked:5,Cancelled:5,Next:4};
 
@@ -974,13 +2018,13 @@ const esc=s=>s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g
 async function fetchJ(u){const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error(r.status);return r.json()}
 async function postJ(u,d){const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});return r.json()}
 function toast(msg,type='ok',ms=3000){const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;document.getElementById('toaster').appendChild(el);setTimeout(()=>el.remove(),ms)}
-const STATE_LABEL={Inbox:'收件',Pending:'待处理',Taizi:'太子分拣',Zhongshu:'中书起草',Menxia:'门下审议',Assigned:'已派发',Doing:'执行中',Review:'待审查',Done:'已完成',Blocked:'阻塞',Cancelled:'已取消',Next:'待执行'};
+const STATE_LABEL_KEYS = {Inbox:'state.Inbox', Pending:'state.Pending', Taizi:'state.Taizi', Zhongshu:'state.Zhongshu', Menxia:'state.Menxia', Assigned:'state.Assigned', Doing:'state.Doing', Review:'state.Review', Done:'state.Done', Blocked:'state.Blocked', Cancelled:'state.Cancelled', Next:'state.Next'};
 // 根据轮次动态生成状态标签
 function stateLabel(t){
   const r = t.review_round||0;
-  if(t.state==='Menxia' && r>1) return `门下审议（第${r}轮）`;
-  if(t.state==='Zhongshu' && r>0) return `中书修订（第${r}轮）`;
-  return STATE_LABEL[t.state]||t.state;
+  if(t.state==='Menxia' && r>1) return t('state.Menxia_round', {n:r});
+  if(t.state==='Zhongshu' && r>0) return t('state.Zhongshu_revision', {n:r});
+  return t(STATE_LABEL_KEYS[t.state]) || t.state;
 }
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -1035,7 +2079,7 @@ function miniPipe(t){
     ${stages.map((s,i) => `
       <div class="ep-node ${s.status}">
         <div class="ep-icon">${s.icon}</div>
-        <div class="ep-name">${s.dept}</div>
+        <div class="ep-name">${t(s.deptKey)}</div>
       </div>
       ${i < stages.length-1 ? `<div class="ep-arrow">›</div>` : ''}
     `).join('')}
@@ -1210,17 +2254,17 @@ async function wakeAllAgents(){
 /* ══ DEPT MONITOR ══ */
 function renderMonitor(tasks){
   const DEPTS = [
-    {id:'taizi',   label:'太子',  emoji:'🤴',role:'太子',    rank:'储君'},
-    {id:'zhongshu',label:'中书省',emoji:'📜',role:'中书令',  rank:'正一品'},
-    {id:'menxia',  label:'门下省',emoji:'🔍',role:'侍中',    rank:'正一品'},
-    {id:'shangshu',label:'尚书省',emoji:'📮',role:'尚书令',  rank:'正一品'},
-    {id:'libu',    label:'礼部',  emoji:'📝',role:'礼部尚书',rank:'正二品'},
-    {id:'hubu',    label:'户部',  emoji:'💰',role:'户部尚书',rank:'正二品'},
-    {id:'bingbu',  label:'兵部',  emoji:'⚔️',role:'兵部尚书',rank:'正二品'},
-    {id:'xingbu',  label:'刑部',  emoji:'⚖️',role:'刑部尚书',rank:'正二品'},
-    {id:'gongbu',  label:'工部',  emoji:'🔧',role:'工部尚书',rank:'正二品'},
-    {id:'libu_hr', label:'吏部',  emoji:'👔',role:'吏部尚书',rank:'正二品'},
-    {id:'zaochao', label:'钦天监',emoji:'📰',role:'朝报官',  rank:'正三品'},
+    {id:'taizi',   label:'太子',  emoji:'🤴',role:'太子',    rank:'储君', labelKey:'dept.taizi', roleKey:'role.taizi', rankKey:'rank.crown_prince'},
+    {id:'zhongshu',label:'中书省',emoji:'📜',role:'中书令',  rank:'正一品', labelKey:'dept.zhongshu', roleKey:'role.zhongshu', rankKey:'rank.first_1'},
+    {id:'menxia',  label:'门下省',emoji:'🔍',role:'侍中',    rank:'正一品', labelKey:'dept.menxia', roleKey:'role.menxia', rankKey:'rank.first_1'},
+    {id:'shangshu',label:'尚书省',emoji:'📮',role:'尚书令',  rank:'正一品', labelKey:'dept.shangshu', roleKey:'role.shangshu', rankKey:'rank.first_1'},
+    {id:'libu',    label:'礼部',  emoji:'📝',role:'礼部尚书',rank:'正二品', labelKey:'dept.libu', roleKey:'role.libu', rankKey:'rank.first_2'},
+    {id:'hubu',    label:'户部',  emoji:'💰',role:'户部尚书',rank:'正二品', labelKey:'dept.hubu', roleKey:'role.hubu', rankKey:'rank.first_2'},
+    {id:'bingbu',  label:'兵部',  emoji:'⚔️',role:'兵部尚书',rank:'正二品', labelKey:'dept.bingbu', roleKey:'role.bingbu', rankKey:'rank.first_2'},
+    {id:'xingbu',  label:'刑部',  emoji:'⚖️',role:'刑部尚书',rank:'正二品', labelKey:'dept.xingbu', roleKey:'role.xingbu', rankKey:'rank.first_2'},
+    {id:'gongbu',  label:'工部',  emoji:'🔧',role:'工部尚书',rank:'正二品', labelKey:'dept.gongbu', roleKey:'role.gongbu', rankKey:'rank.first_2'},
+    {id:'libu_hr', label:'吏部',  emoji:'👔',role:'吏部尚书',rank:'正二品', labelKey:'dept.libu_hr', roleKey:'role.libu_hr', rankKey:'rank.first_2'},
+    {id:'zaochao', label:'钦天监',emoji:'📰',role:'朝报官',  rank:'正三品', labelKey:'dept.qintianjian', roleKey:'role.qintianjian', rankKey:'rank.first_3'},
   ];
 
   // 每个部门当前承接的旨意：从 JJC 任务里找 org 匹配且非 Done 的
@@ -1246,15 +2290,15 @@ function renderMonitor(tasks){
     if(isActive) activeCount++;
 
     const dotCls = isBlocked?'blocked':isActive?'busy':hb.status==='active'?'active':'idle';
-    const statusText = isBlocked?'⚠️ 阻塞':isActive?'⚙️ 执行中':hb.status==='active'?'🟢 活跃':'⚪ 候命';
+    const statusText = isBlocked?t('monitor.status.blocked'):isActive?t('monitor.status.executing'):hb.status==='active'?t('monitor.status.active'):t('monitor.status.standing_by');
     const cardCls = isBlocked?'blocked-card':isActive?'active-card':'';
 
     return `<div class="duty-card ${cardCls}">
       <div class="dc-hdr">
         <span class="dc-emoji">${d.emoji}</span>
         <div class="dc-info">
-          <div class="dc-name">${d.label}</div>
-          <div class="dc-role">${d.role} · ${d.rank}</div>
+          <div class="dc-name">${t(d.labelKey)}</div>
+          <div class="dc-role">${t(d.roleKey)} · ${t(d.rankKey)}</div>
         </div>
         <div class="dc-status">
           <span class="dc-dot ${dotCls}"></span>
@@ -1265,7 +2309,7 @@ function renderMonitor(tasks){
         ${myTasks.length ? myTasks.map(t=>`
           <div class="dc-task" onclick='openTask(${JSON.stringify(t.id)})' style="cursor:pointer;padding:6px;border-radius:8px;border:1px solid var(--line);margin-bottom:6px">
             <div class="dc-task-id">${esc(t.id)}</div>
-            <div class="dc-task-title">${esc(t.title||'(无标题)')}</div>
+            <div class="dc-task-title">${esc(t.title||t('edict.no_title'))}</div>
             ${t.now&&t.now!=='-'?`<div class="dc-task-now">${esc(t.now.substring(0,70))}</div>`:''}
             <div class="dc-task-meta">
               <span class="tag st-${t.state}">${stateLabel(t)}</span>
@@ -1274,7 +2318,7 @@ function renderMonitor(tasks){
           </div>`).join('') :
           `<div class="dc-idle">
             <span style="font-size:20px">🪭</span>
-            <span>候命中 ${recentEdict?`· 最近参与 <b style="color:var(--muted)">${esc(recentEdict.id)}</b>`:'· 尚无旨意记录'}</span>
+            <span>${t('monitor.awaiting')} ${recentEdict?`${t('monitor.last_involved')}<b style="color:var(--muted)">${esc(recentEdict.id)}</b>`:t('monitor.no_edicts')}</span>
           </div>`}
       </div>
       <div class="dc-footer">
@@ -1284,7 +2328,7 @@ function renderMonitor(tasks){
     </div>`;
   });
 
-  animateCounter(document.getElementById('tb-m'), activeCount, v=>v + '活跃');
+  animateCounter(document.getElementById('tb-m'), activeCount, v=>v + t('monitor.status.active').replace(/[^🟢]/g,''));
   document.getElementById('duty-grid').innerHTML = cards.join('');
 }
 
@@ -1312,8 +2356,8 @@ function openTask(id){
     <div class="cur-stage">
       <div class="cs-icon">${activeStage.icon}</div>
       <div class="cs-info">
-        <div class="cs-dept" style="color:${deptColor(activeStage.dept)}">${activeStage.dept}</div>
-        <div class="cs-action">当前阶段：${activeStage.action}</div>
+        <div class="cs-dept" style="color:${deptColor(activeStage.dept)}">${t(activeStage.deptKey)}</div>
+        <div class="cs-action">${t('modal.current_stage')}${t(activeStage.actionKey)}</div>
       </div>
       <span class="hb ${hb.status} cs-hb">${esc(hb.label)}</span>
     </div>` : ''}
@@ -1325,8 +2369,8 @@ function openTask(id){
           <div class="mp-node ${s.status}">
             ${s.status==='done' ? '<div class="mp-done-tick">✓</div>' : ''}
             <div class="mp-icon">${s.icon}</div>
-            <div class="mp-dept" style="${s.status==='active'?'color:var(--acc)':s.status==='done'?'color:var(--ok)':''}">${s.dept}</div>
-            <div class="mp-action">${s.action}</div>
+            <div class="mp-dept" style="${s.status==='active'?'color:var(--acc)':s.status==='done'?'color:var(--ok)':''}">${t(s.deptKey)}</div>
+            <div class="mp-action">${t(s.actionKey)}</div>
           </div>
           ${i < stages.length-1 ? `<div class="mp-arrow" style="${s.status==='done'?'color:var(--ok);opacity:.6':''}">→</div>` : ''}
         </div>
@@ -1335,12 +2379,12 @@ function openTask(id){
 
     <!-- 操作按钮 -->
     <div class="task-actions">
-      ${canStop ? `<button class="btn-action btn-stop" onclick="confirmAction('${esc(t.id)}','stop')">⏸ 叫停任务</button>
-      <button class="btn-action btn-cancel" onclick="confirmAction('${esc(t.id)}','cancel')">🚫 取消任务</button>` : ''}
-      ${canResume ? `<button class="btn-action btn-resume" onclick="taskAction('${esc(t.id)}','resume','恢复执行')">▶️ 恢复执行</button>` : ''}
-      ${['Review','Menxia'].includes(t.state) ? `<button class="btn-action" style="background:#2ecc8a22;color:#2ecc8a;border:1px solid #2ecc8a44" onclick="reviewAction('${esc(t.id)}','approve')">✅ 准奏</button>
-      <button class="btn-action" style="background:#ff527022;color:#ff5270;border:1px solid #ff527044" onclick="reviewAction('${esc(t.id)}','reject')">🚫 封驳</button>` : ''}
-      ${['Pending','Taizi','Zhongshu','Menxia','Assigned','Doing','Review','Next'].includes(t.state) ? `<button class="btn-action" style="background:#7c5cfc18;color:#7c5cfc;border:1px solid #7c5cfc44" onclick="advanceState('${esc(t.id)}','${esc(t.state)}')">⏩ 推进到下一步</button>` : ''}
+      ${canStop ? `<button class="btn-action btn-stop" onclick="confirmAction('${esc(t.id)}','stop')">⏸ ${t('modal.stop')}</button>
+      <button class="btn-action btn-cancel" onclick="confirmAction('${esc(t.id)}','cancel')">🚫 ${t('modal.cancel')}</button>` : ''}
+      ${canResume ? `<button class="btn-action btn-resume" onclick="taskAction('${esc(t.id)}','resume','${t('modal.resume')}')">▶️ ${t('modal.resume')}</button>` : ''}
+      ${['Review','Menxia'].includes(t.state) ? `<button class="btn-action" style="background:#2ecc8a22;color:#2ecc8a;border:1px solid #2ecc8a44" onclick="reviewAction('${esc(t.id)}','approve')">✅ ${t('modal.approve')}</button>
+      <button class="btn-action" style="background:#ff527022;color:#ff5270;border:1px solid #ff527044" onclick="reviewAction('${esc(t.id)}','reject')">🚫 ${t('modal.reject')}</button>` : ''}
+      ${['Pending','Taizi','Zhongshu','Menxia','Assigned','Doing','Review','Next'].includes(t.state) ? `<button class="btn-action" style="background:#7c5cfc18;color:#7c5cfc;border:1px solid #7c5cfc44" onclick="advanceState('${esc(t.id)}','${esc(t.state)}')">⏩ ${t('modal.advance')}</button>` : ''}
     </div>
 
     <!-- 太子调度 -->
@@ -1506,10 +2550,10 @@ async function fetchLiveActivity(){
 
 function fmtStalled(sec){
   const v=Math.max(0, parseInt(sec||0,10));
-  if(v<60) return `${v}秒`;
-  if(v<3600) return `${Math.floor(v/60)}分${v%60}秒`;
+  if(v<60) return t('time.seconds', {n:v});
+  if(v<3600) return t('time.minutes_seconds', {m:Math.floor(v/60),s:v%60});
   const h=Math.floor(v/3600), m=Math.floor((v%3600)/60);
-  return `${h}小时${m}分`;
+  return t('time.hours_minutes', {h,m});
 }
 
 async function fetchSchedulerState(taskId){
@@ -1540,15 +2584,15 @@ function renderSchedulerState(data){
   const retryCount = s.retryCount||0;
   const escalation = s.escalationLevel||0;
   const dispatchStatus = s.lastDispatchStatus||'idle';
-  const statusText = s.enabled===false?'已禁用':'运行中';
-  const lvlText = escalation===0?'无': escalation===1?'门下省': '尚书省';
+  const statusText = s.enabled===false?t('sched.disabled'):t('sched.running');
+  const lvlText = escalation===0?t('sched.escalation.none'): escalation===1?t('sched.escalation.menxia'): t('sched.escalation.shangshu');
 
-  statusEl.textContent = `${statusText} · 阈值 ${s.stallThresholdSec||180}s`;
+  statusEl.textContent = `${statusText} · ${t('sched.threshold')} ${s.stallThresholdSec||180}s`;
   grid.innerHTML = `
-    <div class="sched-kpi"><div class="k">停滞时长</div><div class="v">${esc(fmtStalled(stalledSec))}</div></div>
-    <div class="sched-kpi"><div class="k">重试次数</div><div class="v">${retryCount}</div></div>
-    <div class="sched-kpi"><div class="k">升级级别</div><div class="v">${esc(lvlText)}</div></div>
-    <div class="sched-kpi"><div class="k">派发状态</div><div class="v">${esc(dispatchStatus)}</div></div>
+    <div class="sched-kpi"><div class="k">${t('modal.kpi.stalled')}</div><div class="v">${esc(fmtStalled(stalledSec))}</div></div>
+    <div class="sched-kpi"><div class="k">${t('modal.kpi.retries')}</div><div class="v">${retryCount}</div></div>
+    <div class="sched-kpi"><div class="k">${t('modal.kpi.escalation')}</div><div class="v">${esc(lvlText)}</div></div>
+    <div class="sched-kpi"><div class="k">${t('modal.kpi.dispatch')}</div><div class="v">${esc(dispatchStatus)}</div></div>
   `;
 
   const pieces=[];
@@ -2248,12 +3292,12 @@ function timeAgo(iso){
     if(!d) return '';
     const diff = Date.now() - d.getTime();
     const mins = Math.floor(diff/60000);
-    if(mins<0) return '刚刚';
-    if(mins<1) return '刚刚';
-    if(mins<60) return mins+'分钟前';
+    if(mins<0) return t('time.just_now');
+    if(mins<1) return t('time.just_now');
+    if(mins<60) return t('time.minutes_ago', {n:mins});
     const hrs = Math.floor(mins/60);
-    if(hrs<24) return hrs+'小时前';
-    return Math.floor(hrs/24)+'天前';
+    if(hrs<24) return t('time.hours_ago', {n:hrs});
+    return t('time.days_ago', {n:Math.floor(hrs/24)});
   }catch(e){ return ''; }
 }
 
@@ -3277,6 +4321,29 @@ function toggleTheme(){
     document.documentElement.classList.add('light');
     document.getElementById('theme-btn').textContent = '☀️';
   }
+})();
+
+/* ══ LANGUAGE ══ */
+function toggleLang() {
+  _lang = _lang === 'zh' ? 'en' : 'zh';
+  localStorage.setItem('lang', _lang);
+  const btn = document.getElementById('lang-btn');
+  btn.textContent = _lang === 'zh' ? 'EN' : '中';
+  btn.title = _lang === 'zh' ? t('btn.toggle_lang') : 'Switch Language';
+  document.documentElement.lang = _lang === 'zh' ? 'zh-CN' : 'en';
+  applyI18n();
+  loadAll();
+}
+(function initLang(){
+  const saved = localStorage.getItem('lang');
+  if(saved) _lang = saved;
+  const btn = document.getElementById('lang-btn');
+  if(btn){
+    btn.textContent = _lang === 'zh' ? 'EN' : '中';
+    btn.title = _lang === 'zh' ? t('btn.toggle_lang') : 'Switch Language';
+  }
+  if(_lang === 'en') document.documentElement.lang = 'en';
+  applyI18n();
 })();
 
 /* ══ TASK OUTPUT / 奏章查看 ══ */
